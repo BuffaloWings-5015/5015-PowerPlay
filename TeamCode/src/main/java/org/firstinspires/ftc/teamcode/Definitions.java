@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -41,11 +42,12 @@ public class Definitions {
     public DcMotor rightFront = null;
     public DcMotor leftBack = null;
     public DcMotor rightBack = null;
-    public DcMotor v4bar1 = null;
-    public DcMotor v4bar2 = null;
+    public DcMotorEx v4bar1 = null;
+    public DcMotorEx v4bar2 = null;
     public DcMotor lSlide1 = null;
     public DcMotor lSlide2 = null;
     public CRServo claw = null;
+    public final double ticks_in_degree = 537.7 / 180.0;
 
 
     double speedMultiplier = 1;
@@ -76,8 +78,8 @@ public class Definitions {
         leftBack = Map.dcMotor.get("leftRear");
         rightBack = Map.dcMotor.get("rightRear");
 
-        v4bar1 = Map.dcMotor.get("v4bar1");
-        v4bar2 = Map.dcMotor.get("v4bar2");
+        v4bar1 = Map.get(DcMotorEx.class, "v4bar1");
+        v4bar2 = Map.get(DcMotorEx.class, "v4bar2");
         lSlide1 = Map.dcMotor.get("lSlide1");
         lSlide2 = Map.dcMotor.get("lSlide2");
         claw = Map.crservo.get("claw");
