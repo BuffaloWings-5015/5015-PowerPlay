@@ -20,7 +20,8 @@ public class PipelineNew extends OpenCvPipeline {
     public enum ParkingPosition {
         LEFT,
         CENTER,
-        position, RIGHT
+        RIGHT,
+        NOT_FOUND
     }
 
     // TOPLEFT anchor point for the bounding box
@@ -32,7 +33,7 @@ public class PipelineNew extends OpenCvPipeline {
 
     // Lower and upper boundaries for colors
     private static final Scalar
-            lower_yellow_bounds  = new Scalar(200, 200, 0, 255),
+            lower_yellow_bounds  = new Scalar(150, 150, 0, 255),
             upper_yellow_bounds  = new Scalar(255, 255, 130, 255),
             lower_cyan_bounds    = new Scalar(0, 100, 100, 255),
             upper_cyan_bounds    = new Scalar(150, 255, 255, 255),
@@ -43,7 +44,9 @@ public class PipelineNew extends OpenCvPipeline {
     private final Scalar
             YELLOW  = new Scalar(255, 255, 0),
             CYAN    = new Scalar(0, 255, 255),
-            MAGENTA = new Scalar(255, 0, 255);
+            MAGENTA = new Scalar(255, 0, 255),
+            BLACK = new Scalar(255,255,255);
+
 
     // Percent and mat definitions
     private double yelPercent, cyaPercent, magPercent;
@@ -62,7 +65,7 @@ public class PipelineNew extends OpenCvPipeline {
             SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     // Running variable storing the parking position
-    public static ParkingPosition position = ParkingPosition.LEFT;
+    public ParkingPosition position = ParkingPosition.LEFT;
     public void telemetry_added(){
 
         telemetry.addData("[Pattern]", position);
@@ -96,12 +99,17 @@ public class PipelineNew extends OpenCvPipeline {
 
         // Calculates the highest amount of pixels being covered on each side
         double maxPercent = Math.max(magPercent, Math.max(cyaPercent, yelPercent));
-        boolean colMagenta = maxPercent == magPercent;
-        boolean colYellow = maxPercent == yelPercent;
-        boolean colCyan = maxPercent == cyaPercent;
-        // Checks all percentages, will highlight bounding box in camera preview
-        // based on what color is being detected
-        if (colYellow) {
+        if (maxPercent < 200) {
+            position = ParkingPosition.NOT_FOUND;
+            Imgproc.rectangle(
+                    input,
+                    sleeve_pointA,
+                    sleeve_pointB,
+                    BLACK,
+                    2
+            );
+        }
+        else if (maxPercent == yelPercent) {
             position = ParkingPosition.LEFT;
             Imgproc.rectangle(
                     input,
@@ -110,7 +118,7 @@ public class PipelineNew extends OpenCvPipeline {
                     YELLOW,
                     2
             );
-        } else if (colCyan) {
+        } else if (maxPercent == cyaPercent) {
             position = ParkingPosition.CENTER;
             Imgproc.rectangle(
                     input,
@@ -119,7 +127,7 @@ public class PipelineNew extends OpenCvPipeline {
                     CYAN,
                     2
             );
-        } else if (colMagenta) {
+        } else if (maxPercent == magPercent) {
             position = ParkingPosition.RIGHT;
             Imgproc.rectangle(
                     input,

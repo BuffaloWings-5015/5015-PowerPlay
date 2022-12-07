@@ -65,7 +65,9 @@ public class PowerplayAutoMode extends LinearOpMode {
 
 
         dashboard = FtcDashboard.getInstance();
-        switch (PipelineNew.ParkingPosition.position) {
+        switch (detector.getPosition()) {
+            case NOT_FOUND:
+                // do something
             case LEFT:
                 // ...
                 goLeft();

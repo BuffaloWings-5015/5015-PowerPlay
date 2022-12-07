@@ -20,7 +20,8 @@ public class SleeveDetection extends OpenCvPipeline {
     public enum ParkingPosition {
         LEFT,
         CENTER,
-        RIGHT
+        RIGHT,
+        NOT_FOUND
     }
 
     // TOPLEFT anchor point for the bounding box
@@ -58,7 +59,7 @@ public class SleeveDetection extends OpenCvPipeline {
             SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     // Running variable storing the parking position
-    public static ParkingPosition position = ParkingPosition.CENTER ;
+    public ParkingPosition position = ParkingPosition.CENTER ;
     private Telemetry telemetry;
     public void telemetry_added(){
 
@@ -96,7 +97,17 @@ public class SleeveDetection extends OpenCvPipeline {
 
         // Checks all percentages, will highlight bounding box in camera preview
         // based on what color is being detected
-        if (maxPercent == yelPercent) {
+        if (maxPercent == 0) {
+            position = ParkingPosition.NOT_FOUND;
+            Imgproc.rectangle(
+                    input,
+                    sleeve_pointA,
+                    sleeve_pointB,
+                    YELLOW,
+                    2
+            );
+        }
+            else if (maxPercent == yelPercent) {
             position = ParkingPosition.LEFT;
             Imgproc.rectangle(
                     input,
