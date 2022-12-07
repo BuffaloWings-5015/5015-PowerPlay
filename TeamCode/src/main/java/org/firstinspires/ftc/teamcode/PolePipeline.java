@@ -95,16 +95,40 @@ public class PolePipeline extends OpenCvPipeline {
         for (MatOfPoint2f poly : contoursPoly) {
             contoursPolyList.add(new MatOfPoint(poly.toArray()));
         }
-        for (int i = 0; i < contours.size(); i++) {
-            Imgproc.rectangle(input, boundRect[i].tl(), boundRect[i].br(), YELLOW, 2);
-            int font = Imgproc.FONT_HERSHEY_SIMPLEX;
-            int scale = 1;
-            int thickness = 3;
-            Point position = boundRect[i].tl();
-            String text = boundRect[i].tl().toString();
-            Imgproc.putText(input, text, position, font, scale, new Scalar(90,245,255), thickness);
+
+        double maxVal = 0;
+        int maxValIdx = 0;
+        for (int contourIdx = 0; contourIdx < contours.size(); contourIdx++)
+        {
+            double contourArea = Imgproc.contourArea(contours.get(contourIdx));
+            if (maxVal < contourArea)
+            {
+                maxVal = contourArea;
+                maxValIdx = contourIdx;
+            }
         }
 
+        Imgproc.drawContours(input, contours, maxValIdx, new Scalar(0,255,0), 5);
+        Rect rect = Imgproc.boundingRect(contours.get(maxValIdx));
+        Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(0,255,2), 2);
+        int font = Imgproc.FONT_HERSHEY_PLAIN;
+        int scale = 1;
+        int thickness = 1;
+        Point position = rect.tl();
+        String text = rect.tl().toString();
+        Imgproc.putText(input, text, position, font, scale, new Scalar(0,255,0), thickness);
+
+        /*
+        for (int i = 0; i < contours.size(); i++) {
+            Imgproc.rectangle(input, boundRect[i].tl(), boundRect[i].br(), YELLOW, 2);
+            int font = Imgproc.FONT_HERSHEY_PLAIN;
+            int scale = 1;
+            int thickness = 1;
+            Point position = boundRect[i].tl();
+            String text = boundRect[i].tl().toString();
+            Imgproc.putText(input, text, position, font, scale, new Scalar(0,255,0), thickness);
+        }
+*/
 
         // Memory cleanup
 
