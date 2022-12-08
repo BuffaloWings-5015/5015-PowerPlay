@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class PIDF_Arm extends OpMode {
     Definitions robot = new Definitions();
     private PIDController controller;
-
+    //TODO: tune in ftc dashboard
     public static double kP = 0, kI = 0, kD = -12.0;
     public static double kf = 0;
 
@@ -25,6 +25,7 @@ public class PIDF_Arm extends OpMode {
     @Override
     public void init() {
         controller = new PIDController(kP, kI, kD);
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 

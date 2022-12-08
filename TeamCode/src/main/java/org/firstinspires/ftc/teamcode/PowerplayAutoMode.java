@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.PipelineNew.ParkingPosition.CENTER;
-import static org.firstinspires.ftc.teamcode.PipelineNew.ParkingPosition.LEFT;
-import static org.firstinspires.ftc.teamcode.PipelineNew.ParkingPosition.RIGHT;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -18,22 +15,33 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-import java.nio.channels.Pipe;
-import java.util.Arrays;
-
 @Autonomous(name="Sleeve Detector", group="Auto")
 public class PowerplayAutoMode extends LinearOpMode {
     
     FtcDashboard dashboard;
-    Definitions robot = new Definitions();
     PipelineNew detector;
     private OpenCvCamera webcam;
 
     @Override
     public void runOpMode() throws InterruptedException {
         OpenCvWebcam webcam;
-        robot.robotHardwareMapInit(hardwareMap);
-        robot.driveInit();
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        //TODO: TUNE ROADRUNNER!!!! NOW
+        Trajectory TrajectoryRight = drive.trajectoryBuilder(new Pose2d())
+                .forward(10)
+                .strafeRight(15)
+                .build();
+        Trajectory TrajectoryLeft = drive.trajectoryBuilder(new Pose2d())
+                .forward(15)
+                .strafeLeft(15)
+                .build();
+        Trajectory TrajectoryMiddle = drive.trajectoryBuilder(new Pose2d())
+                .forward(15)
+                .strafeLeft(15)
+                .build();
+
+
+
         int cameraMonitorViewId = hardwareMap.appContext
                 .getResources().getIdentifier("cameraMonitorViewId",
                         "id", hardwareMap.appContext.getPackageName());
@@ -68,26 +76,29 @@ public class PowerplayAutoMode extends LinearOpMode {
         switch (detector.getPosition()) {
             case NOT_FOUND:
                 // do something
+                drive.followTrajectory(TrajectoryMiddle);
+                telemetry.addData("position",detector.getPosition());
+                telemetry.update();
             case LEFT:
                 // ...
-                goLeft();
+                drive.followTrajectory(TrajectoryLeft);
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
                 break;
             case RIGHT:
                 // ...
-                goRight();
+                drive.followTrajectory(TrajectoryRight);
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
                 break;
             case CENTER:
-                goForward();
+                drive.followTrajectory(TrajectoryMiddle);
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
             default:
-                goForward();
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
+                drive.followTrajectory(TrajectoryMiddle);
         }
         webcam.stopStreaming();
     }
@@ -102,69 +113,5 @@ public class PowerplayAutoMode extends LinearOpMode {
         packet.put("Detected Position", detector.getPosition());
 
         dashboard.sendTelemetryPacket(packet);
-    }
-    private void goLeft() {
-        robot.leftFront.setPower(-0.5);
-        robot.rightFront.setPower(-0.5);
-        robot.leftBack.setPower(-0.5);
-        robot.rightBack.setPower(-0.5);
-        sleep(1000);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
-        sleep(1000);
-        robot.leftFront.setPower(0.5);
-        robot.rightFront.setPower(-0.5);
-        robot.leftBack.setPower(-0.5);
-        robot.rightBack.setPower(0.5);
-        sleep(1700);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
-        /*
-        robot.leftFront.setPower(-0.5);
-        robot.rightFront.setPower(-0.5);
-        robot.leftBack.setPower(-0.5);
-        robot.rightBack.setPower(-0.5);
-        sleep(500);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
-         */
-    }
-    private void goRight(){
-        robot.leftFront.setPower(-0.5);
-        robot.rightFront.setPower(-0.5);
-        robot.leftBack.setPower(-0.5);
-        robot.rightBack.setPower(-0.5);
-        sleep(1100);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
-        sleep(1000);
-        robot.leftFront.setPower(-0.5);
-        robot.rightFront.setPower(0.5);
-        robot.leftBack.setPower(0.5);
-        robot.rightBack.setPower(-0.5);
-        sleep(1300);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
-    }
-    private void goForward(){
-        robot.leftFront.setPower(-0.5);
-        robot.rightFront.setPower(-0.5);
-        robot.leftBack.setPower(-0.5);
-        robot.rightBack.setPower(-0.5);
-        sleep(1000);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
-    }
-}
+
+}}
