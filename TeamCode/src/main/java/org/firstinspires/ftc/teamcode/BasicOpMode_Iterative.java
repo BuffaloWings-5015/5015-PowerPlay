@@ -39,13 +39,10 @@ public class BasicOpMode_Iterative extends LinearOpMode {
         while (opModeIsActive()) {
             if (gamepad2.right_stick_y > 0) {
                 robot.lSlide1.setPower(gamepad2.right_stick_y);
-                robot.lSlide2.setPower(gamepad2.right_stick_y);
             } else if (gamepad2.right_stick_y < 0) {
                 robot.lSlide1.setPower(gamepad2.right_stick_y);
-                robot.lSlide2.setPower(gamepad2.right_stick_y);
             } else {
                 robot.lSlide1.setPower(0);
-                robot.lSlide2.setPower(0);
             }
             {
                 if (gamepad2.left_stick_y > 0) {

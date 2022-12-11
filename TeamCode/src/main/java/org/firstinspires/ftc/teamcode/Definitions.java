@@ -45,7 +45,6 @@ public class Definitions {
     public DcMotorEx v4bar1 = null;
     public DcMotorEx v4bar2 = null;
     public DcMotor lSlide1 = null;
-    public DcMotor lSlide2 = null;
     public CRServo claw = null;
     public final double ticks_in_degree = 537.7 / 180.0;
 
@@ -81,7 +80,6 @@ public class Definitions {
         v4bar1 = Map.get(DcMotorEx.class, "v4bar1");
         v4bar2 = Map.get(DcMotorEx.class, "v4bar2");
         lSlide1 = Map.dcMotor.get("lSlide1");
-        lSlide2 = Map.dcMotor.get("lSlide2");
         claw = Map.crservo.get("claw");
         imu = Map.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -113,7 +111,6 @@ public class Definitions {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         v4bar1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lSlide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
@@ -123,7 +120,6 @@ public class Definitions {
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.FORWARD);
         lSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
-        lSlide2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
     }

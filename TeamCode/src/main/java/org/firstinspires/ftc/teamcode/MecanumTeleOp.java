@@ -98,17 +98,15 @@ public class MecanumTeleOp extends LinearOpMode {
             robot.v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             if (true) {
                 robot.lSlide1.setPower(gamepad2.right_stick_y);
-                robot.lSlide2.setPower(gamepad2.right_stick_y);
             }
-            if (gamepad2.a || gamepad2.b){
+            if (gamepad2.right_bumper || gamepad2.left_bumper){
                 if (true) {
                     robot.lSlide1.setPower(gamepad2.right_stick_y);
-                    robot.lSlide2.setPower(gamepad2.right_stick_y);
                 }
-                if (gamepad2.a) {
+                if (gamepad2.right_bumper) {
                     robot.claw.setPower(0.5);
                 }
-                else if (gamepad2.b) {
+                else if (gamepad2.left_bumper) {
                     robot.claw.setPower(-0.5);
                 } else {
                     robot.claw.setPower(0);
