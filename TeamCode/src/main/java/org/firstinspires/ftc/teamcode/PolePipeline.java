@@ -71,19 +71,19 @@ public class PolePipeline extends OpenCvPipeline {
         // Gets channels from given source mat
         Core.inRange(blurredMat, lower_yellow_bounds, upper_yellow_bounds, yelMat);
         List<MatOfPoint> contours = new ArrayList<>();
-        Mat hierarchey = new Mat();
-        Imgproc.findContours(yelMat, contours, hierarchey, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-        //Drawing the Contours
-        MatOfPoint2f[] contoursPoly  = new MatOfPoint2f[contours.size()];
-        Rect[] boundRect = new Rect[contours.size()];
-        Point[] centers = new Point[contours.size()];
-        float[][] radius = new float[contours.size()][1];
-        for (int i = 0; i < contours.size(); i++) {
-            contoursPoly[i] = new MatOfPoint2f();
-            Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
-            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
-            centers[i] = new Point();
-            Imgproc.minEnclosingCircle(contoursPoly[i], centers[i], radius[i]);
+            Mat hierarchey = new Mat();
+            Imgproc.findContours(yelMat, contours, hierarchey, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+            //Drawing the Contours
+            MatOfPoint2f[] contoursPoly  = new MatOfPoint2f[contours.size()];
+            Rect[] boundRect = new Rect[contours.size()];
+            Point[] centers = new Point[contours.size()];
+            float[][] radius = new float[contours.size()][1];
+            for (int i = 0; i < contours.size(); i++) {
+                contoursPoly[i] = new MatOfPoint2f();
+                Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
+                boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
+                centers[i] = new Point();
+                Imgproc.minEnclosingCircle(contoursPoly[i], centers[i], radius[i]);
 
             //Adding text to the image
             /*
