@@ -29,11 +29,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static android.provider.Contacts.SettingsColumns.KEY;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -90,7 +93,6 @@ public class BasicOpMode_SingleServoTest extends LinearOpMode {
             servo.setPower(1);
             sleep(5000);
             servo.setPower(0);
-
             servo.setPower(-1);
             sleep(5000);
             servo.setPower(0);

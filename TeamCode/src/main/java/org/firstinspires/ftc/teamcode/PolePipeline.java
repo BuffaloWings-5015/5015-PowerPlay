@@ -15,8 +15,7 @@ public class PolePipeline extends OpenCvPipeline {
     MAGENTA = Parking Right
      */
     Telemetry telemetry;
-
-
+    public Point position;
     // TOPLEFT anchor point for the bounding box
     private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(445, 78);
 
@@ -108,15 +107,17 @@ public class PolePipeline extends OpenCvPipeline {
             }
         }
 
-        Imgproc.drawContours(input, contours, maxValIdx, new Scalar(0,255,0), 5);
+        Imgproc.drawContours(input, contours, maxValIdx, new Scalar(255,0,0), 1);
         Rect rect = Imgproc.boundingRect(contours.get(maxValIdx));
-        Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(0,255,2), 2);
+        Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(0,255,2), 1);
         int font = Imgproc.FONT_HERSHEY_PLAIN;
         int scale = 1;
         int thickness = 1;
-        Point position = rect.tl();
+        position = rect.tl();
         String text = rect.tl().toString();
         Imgproc.putText(input, text, position, font, scale, new Scalar(0,255,0), thickness);
+        telemetry.addData("the point", position.toString());
+        telemetry.update();
 
         /*
         for (int i = 0; i < contours.size(); i++) {
@@ -134,7 +135,9 @@ public class PolePipeline extends OpenCvPipeline {
 
         return input;
     }
-
+    public Point getCoords() {
+        return position;
+    }
     // Returns an enum being the current position where the robot will park
 
 
