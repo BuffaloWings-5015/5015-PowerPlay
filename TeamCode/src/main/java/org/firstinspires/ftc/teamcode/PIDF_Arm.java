@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
 @TeleOp
@@ -31,6 +32,8 @@ public class PIDF_Arm extends OpMode {
         controller = new PIDController(kP, kI, kD);
         arm = hardwareMap.get(DcMotorEx.class, "v4bar1");
         arn2 = hardwareMap.get(DcMotorEx.class, "v4bar2");
+        arn2.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 
@@ -42,8 +45,6 @@ public class PIDF_Arm extends OpMode {
 
     @Override
     public void loop() {
-        arm.setPower(1);
-        arn2.setPower(1);
         armPos = arm.getCurrentPosition() / 288.0 / 360;
 
         //Arm buttons
@@ -99,7 +100,7 @@ public class PIDF_Arm extends OpMode {
 
         double power = pid;
 
-        arm.setPower(1);
-        arn2.setPower(1);
+        arm.setPower(power);
+        arn2.setPower(power);
     }
 }

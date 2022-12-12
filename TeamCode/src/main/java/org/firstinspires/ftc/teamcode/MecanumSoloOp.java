@@ -4,13 +4,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.firstinspires.ftc.teamcode.drive.util.AxisDirection;
-import org.firstinspires.ftc.teamcode.drive.util.BNO055IMUUtil;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp
-public class MecanumTeleOp extends LinearOpMode {
+public class MecanumSoloOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -18,6 +15,7 @@ public class MecanumTeleOp extends LinearOpMode {
         Definitions robot = new Definitions();
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
+
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
@@ -32,8 +30,9 @@ public class MecanumTeleOp extends LinearOpMode {
         // Without this, data retrieving from the IMU throws an exception
         imu.initialize(parameters);
 
+
         waitForStart();
-        float speedMultiplier = 1-gamepad1.right_trigger;
+        float speedMultiplier = 1;
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
@@ -97,31 +96,44 @@ public class MecanumTeleOp extends LinearOpMode {
             robot.v4bar1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             robot.v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-                robot.lSlide1.setPower(gamepad2.right_stick_y);
-
-
-                if (gamepad2.left_bumper) {
-                    robot.claw.setPower(0.5);
+                if (gamepad1.a) {
+                    robot.lSlide1.setPower(1);
+                } else if (gamepad1.b) {
+                    robot.lSlide1.setPower(-1);
+                } else {
+                    robot.lSlide1.setPower(0);
                 }
-                else if (gamepad2.right_bumper) {
+
+
+                if (gamepad1.right_bumper) {
                     robot.claw.setPower(-0.5);
+                }
+                else if (gamepad1.left_bumper) {
+                    robot.claw.setPower(0.5);
                 } else {
                     robot.claw.setPower(0);
                 }
 
             float v4barspeed;
             v4barspeed = 1 - gamepad2.right_trigger;
-            {
-                if (gamepad2.left_stick_y != 0) {
-                    robot.v4bar1.setPower(gamepad2.left_stick_y);
-                    robot.v4bar2.setPower(gamepad2.left_stick_y);
-                    robot.v4bar3.setPower(gamepad2.left_stick_y);
+
+                if (gamepad1.left_trigger != 0) {
+                    robot.v4bar1.setPower(-gamepad1.left_trigger);
+                    robot.v4bar2.setPower(-gamepad1.left_trigger);
+                    robot.v4bar3.setPower(-gamepad1.left_trigger);
                 }
-                else {
+                else  if ( gamepad1.right_trigger != 0){
+                    robot.v4bar1.setPower(gamepad1.right_trigger);
+                    robot.v4bar2.setPower(gamepad1.right_trigger);
+                    robot.v4bar3.setPower(gamepad1.right_trigger);
+                } else {
                     robot.v4bar1.setPower(0);
-                    robot.v4bar2.setPower(0);
+                            robot.v4bar2.setPower(0);
+                                    robot.v4bar3.setPower(0);
                 }
                 telemetry.update();
             }
+
         }
-    }}
+
+    }

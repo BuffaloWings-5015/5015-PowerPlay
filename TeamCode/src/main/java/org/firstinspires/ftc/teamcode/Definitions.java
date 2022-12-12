@@ -44,6 +44,7 @@ public class Definitions {
     public DcMotor rightBack = null;
     public DcMotorEx v4bar1 = null;
     public DcMotorEx v4bar2 = null;
+    public DcMotorEx v4bar3 = null;
     public DcMotor lSlide1 = null;
     public CRServo claw = null;
     public final double ticks_in_degree = 537.7 / 180.0;
@@ -79,6 +80,7 @@ public class Definitions {
 
         v4bar1 = Map.get(DcMotorEx.class, "v4bar1");
         v4bar2 = Map.get(DcMotorEx.class, "v4bar2");
+        v4bar3 = Map.get(DcMotorEx.class, "v4bar3");
         lSlide1 = Map.dcMotor.get("lSlide1");
         claw = Map.crservo.get("claw");
         imu = Map.get(BNO055IMU.class, "imu");
@@ -95,6 +97,7 @@ public class Definitions {
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         v4bar2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        v4bar3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Sets the motors to run through driver input instead of running to an encoder position
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -102,6 +105,7 @@ public class Definitions {
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         v4bar1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        v4bar3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         v4bar2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Sets each motor to hold its current position while having zero power set
@@ -111,6 +115,7 @@ public class Definitions {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         v4bar1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        v4bar3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lSlide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
@@ -120,6 +125,9 @@ public class Definitions {
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.FORWARD);
         lSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
+        v4bar3.setDirection(DcMotorSimple.Direction.REVERSE);
+        v4bar2.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
 
     }

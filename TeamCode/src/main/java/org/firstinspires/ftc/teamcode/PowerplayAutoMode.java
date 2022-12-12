@@ -63,33 +63,42 @@ public class PowerplayAutoMode extends LinearOpMode {
 
         waitForStart();
 
-
+        set4bar(-0.80);
+        sleep(1000);
         dashboard = FtcDashboard.getInstance();
         switch (detector.getPosition()) {
             case NOT_FOUND:
                 goLeft();
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
+                sleep(2000);
+                set4bar(0);
+                stop();
             case LEFT:
                 // ...
                 goLeft();
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
+                sleep(2000);
+                set4bar(0);
+                stop();
                 break;
             case RIGHT:
                 // ...
                 goRight();
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
+                sleep(2000);
+                set4bar(0);
+                stop();
                 break;
             case CENTER:
                 goForward();
                 telemetry.addData("position",detector.getPosition());
                 telemetry.update();
-            default:
-                goForward();
-                telemetry.addData("position",detector.getPosition());
-                telemetry.update();
+                sleep(2000);
+                set4bar(0);
+                stop();
         }
         webcam.stopStreaming();
     }
@@ -105,12 +114,17 @@ public class PowerplayAutoMode extends LinearOpMode {
 
         dashboard.sendTelemetryPacket(packet);
     }
+    private void set4bar(double pwoe) {
+        robot.v4bar2.setPower(pwoe);
+        robot.v4bar1.setPower(pwoe);
+        robot.v4bar3.setPower(pwoe);
+    }
     private void goLeft() {
         robot.leftFront.setPower(-0.5);
         robot.rightFront.setPower(-0.5);
         robot.leftBack.setPower(-0.5);
         robot.rightBack.setPower(-0.5);
-        sleep(1000);
+        sleep(1200);
         robot.leftFront.setPower(0);
         robot.rightFront.setPower(0);
         robot.leftBack.setPower(0);
@@ -120,7 +134,7 @@ public class PowerplayAutoMode extends LinearOpMode {
         robot.rightFront.setPower(-0.5);
         robot.leftBack.setPower(-0.5);
         robot.rightBack.setPower(0.5);
-        sleep(1700);
+        sleep(1400);
         robot.leftFront.setPower(0);
         robot.rightFront.setPower(0);
         robot.leftBack.setPower(0);
@@ -142,17 +156,17 @@ public class PowerplayAutoMode extends LinearOpMode {
         robot.rightFront.setPower(-0.5);
         robot.leftBack.setPower(-0.5);
         robot.rightBack.setPower(-0.5);
-        sleep(1100);
+        sleep(1200);
         robot.leftFront.setPower(0);
         robot.rightFront.setPower(0);
         robot.leftBack.setPower(0);
         robot.rightBack.setPower(0);
-        sleep(1000);
+        sleep(1050);
         robot.leftFront.setPower(-0.5);
         robot.rightFront.setPower(0.5);
         robot.leftBack.setPower(0.5);
         robot.rightBack.setPower(-0.5);
-        sleep(1300);
+        sleep(1700);
         robot.leftFront.setPower(0);
         robot.rightFront.setPower(0);
         robot.leftBack.setPower(0);
@@ -163,7 +177,7 @@ public class PowerplayAutoMode extends LinearOpMode {
         robot.rightFront.setPower(-0.5);
         robot.leftBack.setPower(-0.5);
         robot.rightBack.setPower(-0.5);
-        sleep(800);
+        sleep(1300);
         robot.leftFront.setPower(0);
         robot.rightFront.setPower(0);
         robot.leftBack.setPower(0);

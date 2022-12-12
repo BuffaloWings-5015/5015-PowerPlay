@@ -25,7 +25,7 @@ public class PipelineNew extends OpenCvPipeline {
     }
 
     // TOPLEFT anchor point for the bounding box
-    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(445, 78);
+    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(640, 50);
 
     // Width and height for the bounding box
     public static int REGION_WIDTH = 30;
@@ -65,7 +65,7 @@ public class PipelineNew extends OpenCvPipeline {
             SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     // Running variable storing the parking position
-    public ParkingPosition position = ParkingPosition.LEFT;
+    public ParkingPosition position = ParkingPosition.NOT_FOUND;
     public void telemetry_added(){
 
         telemetry.addData("[Pattern]", position);
