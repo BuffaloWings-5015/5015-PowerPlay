@@ -18,7 +18,7 @@ public class BasicOpMode_Iterative extends LinearOpMode {
         Definitions robot = new Definitions();
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
-
+        double v4barpower = 0;
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
 
@@ -28,11 +28,19 @@ public class BasicOpMode_Iterative extends LinearOpMode {
 
         waitForStart();
         float speedMultiplier = 1-gamepad1.right_trigger;
+
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
 
             while (opModeIsActive()) {
+                v4barpower = gamepad2.left_stick_y;
+                if (v4barpower > 0) {
+                    v4barpower = Math.pow(v4barpower, 2);
+                } else if (v4barpower < 0) {
+                    v4barpower = v4barpower * -1;
+                    v4barpower = Math.pow(v4barpower, 2);
+                }
                 double y =gamepad1.left_stick_y; // Remember, this is reversed!
                 double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
                 double rx = -gamepad1.right_stick_x;
@@ -107,9 +115,9 @@ public class BasicOpMode_Iterative extends LinearOpMode {
             v4barspeed = 1 - gamepad2.right_trigger;
             {
                 if (gamepad2.left_stick_y != 0) {
-                    robot.v4bar1.setPower(gamepad2.left_stick_y);
-                    robot.v4bar2.setPower(gamepad2.left_stick_y);
-                    robot.v4bar3.setPower(gamepad2.left_stick_y);
+                    robot.v4bar1.setPower(v4barpower);
+                    robot.v4bar2.setPower(v4barpower);
+                    robot.v4bar3.setPower(v4barpower);
                 }
                 else {
                     robot.v4bar1.setPower(0);

@@ -22,8 +22,13 @@ public class SleeveContours extends OpenCvPipeline {
     MAGENTA = Parking Right
      */
     Telemetry telemetry;
-
-
+    public enum ParkingPosition {
+        LEFT,
+        CENTER,
+        RIGHT,
+        NOT_FOUND
+    }
+    public ParkingPosition pposition = ParkingPosition.NOT_FOUND;
     // TOPLEFT anchor point for the bounding box
     private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(445, 78);
 
@@ -45,7 +50,8 @@ public class SleeveContours extends OpenCvPipeline {
     // Color definitions
     private final Scalar
             YELLOW  = new Scalar(150,255,255),
-            CYAN    = new Scalar(0, 255, 255);
+            CYAN    = new Scalar(0, 255, 255),
+            MAGENTA   = new Scalar(255, 255, 0);
 
 
     // Percent and mat definitions
@@ -72,6 +78,7 @@ public class SleeveContours extends OpenCvPipeline {
     }
     @Override
     public Mat processFrame(Mat input) {
+
         // Noise reduction
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
         Imgproc.blur(mat, blurredMat, new Size(5, 5));
@@ -120,12 +127,13 @@ public class SleeveContours extends OpenCvPipeline {
             }
         }
 
-        Imgproc.drawContours(input, contours, maxValIdx, new Scalar(255,255,0), 1);
-        Rect rect = Imgproc.boundingRect(contours.get(maxValIdx));
-        Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(255,255,0), 1);
+
         int font = Imgproc.FONT_HERSHEY_PLAIN;
         int scale = 1;
         int thickness = 1;
+        Imgproc.drawContours(input, contours, maxValIdx, new Scalar(255,255,0), 1);
+        Rect rect = Imgproc.boundingRect(contours.get(maxValIdx));
+        Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(255,255,0), 1);
         Point position = rect.tl();
         String text = rect.tl().toString();
         Imgproc.putText(input, text, position, font, scale, new Scalar(255,255,0), thickness);
@@ -170,12 +178,7 @@ public class SleeveContours extends OpenCvPipeline {
             }
         }
 
-        Imgproc.drawContours(input, magcontours, magmaxValIdx, new Scalar(255,0,255), 1);
-        Rect magrect = Imgproc.boundingRect(magcontours.get(magmaxValIdx));
-        Imgproc.rectangle(input, magrect.tl(), magrect.br(), new Scalar(255,0,255), 1);
-        Point magposition = magrect.tl();
-        String magtext = magrect.tl().toString();
-        Imgproc.putText(input, magtext, magposition, font, scale, new Scalar(255,0,255), thickness);
+
 
         // Memory cleanup
 
@@ -225,6 +228,23 @@ public class SleeveContours extends OpenCvPipeline {
         Point cyaposition = cyarect.tl();
         String cyatext = cyarect.tl().toString();
         Imgproc.putText(input, cyatext, cyaposition, font, scale, new Scalar(0,255,255), thickness);
+        double maxPosition = Math.max(cyamaxVal,Math.max(maxVal,cyamaxVal));
+        if (maxPosition == 0) {
+            pposition = ParkingPosition.NOT_FOUND;
+
+        }
+        else if (maxPosition == maxVal) {
+            pposition = ParkingPosition.LEFT;
+
+        } else if (maxPosition == cyaPercent) {
+            pposition = ParkingPosition.CENTER;
+
+        } else if (maxPosition == magPercent) {
+            pposition = ParkingPosition.RIGHT;
+
+        }
+        telemetry.addData("the postion",pposition);
+        telemetry.update();
         return input;
     }
 

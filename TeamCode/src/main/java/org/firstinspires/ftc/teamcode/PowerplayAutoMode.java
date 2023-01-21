@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.PipelineNew.ParkingPosition.CENTER;
-import static org.firstinspires.ftc.teamcode.PipelineNew.ParkingPosition.LEFT;
-import static org.firstinspires.ftc.teamcode.PipelineNew.ParkingPosition.RIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;

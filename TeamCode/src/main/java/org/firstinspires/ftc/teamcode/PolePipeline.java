@@ -16,6 +16,13 @@ public class PolePipeline extends OpenCvPipeline {
      */
     Telemetry telemetry;
     public Point position;
+    public int x;
+    public enum PolePosition {
+        LEFT,
+        CENTER,
+        RIGHT,
+    }
+    public PolePosition polePositoin = PolePosition.CENTER ;
     // TOPLEFT anchor point for the bounding box
     private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(445, 78);
 
@@ -69,20 +76,21 @@ public class PolePipeline extends OpenCvPipeline {
 
         // Gets channels from given source mat
         Core.inRange(blurredMat, lower_yellow_bounds, upper_yellow_bounds, yelMat);
+        if (Core.countNonZero(yelMat) > 0) {
         List<MatOfPoint> contours = new ArrayList<>();
-            Mat hierarchey = new Mat();
-            Imgproc.findContours(yelMat, contours, hierarchey, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-            //Drawing the Contours
-            MatOfPoint2f[] contoursPoly  = new MatOfPoint2f[contours.size()];
-            Rect[] boundRect = new Rect[contours.size()];
-            Point[] centers = new Point[contours.size()];
-            float[][] radius = new float[contours.size()][1];
-            for (int i = 0; i < contours.size(); i++) {
-                contoursPoly[i] = new MatOfPoint2f();
-                Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
-                boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
-                centers[i] = new Point();
-                Imgproc.minEnclosingCircle(contoursPoly[i], centers[i], radius[i]);
+        Mat hierarchey = new Mat();
+        Imgproc.findContours(yelMat, contours, hierarchey, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        //Drawing the Contours
+        MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contours.size()];
+        Rect[] boundRect = new Rect[contours.size()];
+        Point[] centers = new Point[contours.size()];
+        float[][] radius = new float[contours.size()][1];
+        for (int i = 0; i < contours.size(); i++) {
+            contoursPoly[i] = new MatOfPoint2f();
+            Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
+            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
+            centers[i] = new Point();
+            Imgproc.minEnclosingCircle(contoursPoly[i], centers[i], radius[i]);
 
             //Adding text to the image
             /*
@@ -97,27 +105,36 @@ public class PolePipeline extends OpenCvPipeline {
 
         double maxVal = 0;
         int maxValIdx = 0;
-        for (int contourIdx = 0; contourIdx < contours.size(); contourIdx++)
-        {
+        for (int contourIdx = 0; contourIdx < contours.size(); contourIdx++) {
             double contourArea = Imgproc.contourArea(contours.get(contourIdx));
-            if (maxVal < contourArea)
-            {
+            if (maxVal < contourArea) {
                 maxVal = contourArea;
                 maxValIdx = contourIdx;
             }
         }
 
-        Imgproc.drawContours(input, contours, maxValIdx, new Scalar(255,0,0), 1);
+        Imgproc.drawContours(input, contours, maxValIdx, new Scalar(255, 0, 0), 1);
         Rect rect = Imgproc.boundingRect(contours.get(maxValIdx));
-        Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(0,255,2), 1);
+        Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(0, 255, 2), 1);
         int font = Imgproc.FONT_HERSHEY_PLAIN;
         int scale = 1;
         int thickness = 1;
         position = rect.tl();
         String text = rect.tl().toString();
-        Imgproc.putText(input, text, position, font, scale, new Scalar(0,255,0), thickness);
-        telemetry.addData("the point", position.toString());
+        Imgproc.putText(input, text, position, font, scale, new Scalar(0, 255, 0), thickness);
         telemetry.update();
+        int x = rect.x;
+        int y = rect.y;
+            telemetry.addData("the point", position.toString());
+            telemetry.addData("thepoint's x", rect.x);
+            if (x <= 600) {
+                polePositoin = PolePosition.LEFT;
+            } else if (x > 600 && x < 800) {
+                polePositoin = PolePosition.CENTER;
+            } else if (x >= 800) {
+                polePositoin = PolePosition.RIGHT;
+            }
+    }
 
         /*
         for (int i = 0; i < contours.size(); i++) {
@@ -135,8 +152,8 @@ public class PolePipeline extends OpenCvPipeline {
 
         return input;
     }
-    public Point getCoords() {
-        return position;
+    public PolePosition getCoords() {
+        return polePositoin;
     }
     // Returns an enum being the current position where the robot will park
 
