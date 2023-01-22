@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.firstinspires.ftc.teamcode.drive.util.AxisDirection;
-import org.firstinspires.ftc.teamcode.drive.util.BNO055IMUUtil;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
-public class MecanumTeleOp extends LinearOpMode {
+public class MecanumTeleOp2 extends LinearOpMode {
     @Override
+
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
@@ -35,6 +32,7 @@ public class MecanumTeleOp extends LinearOpMode {
         double targetSlide;
         double targetV4b;
         double fbConst;
+        double targetV4bdegree = 0;
         fbConst = 0;
         targetSlide = 0;
         targetV4b = 0;
@@ -150,16 +148,44 @@ public class MecanumTeleOp extends LinearOpMode {
                 targetV4b = 0;
                 fbConst = -0.25;
             }
+
+            //targetSlide += gamepad2.left_stick_y;
+            targetV4b += gamepad2.right_stick_y * 8;
+
+
             final double KslideMulti;
             final double KV4bMulti;
             KslideMulti = 0.025;
-            KV4bMulti = -0.005;
+            KV4bMulti = -0.001;
+
+         /*
+            if (targetSlide <= 0) {
+                targetSlide = 0;
+            }
+
+          */
+            /*
+            if (targetV4b >= 0) {
+                targetV4b = 0;
+            }
+             */
+
+            if (gamepad2.a) {
+                robot.lSlide1.setPower(1);
+            } else if (gamepad2.b) {
+                robot.lSlide1.setPower(-1);
+            } else {
+                robot.lSlide1.setPower(0);
+            }
+
             if (true){
                 robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti + fbConst);
-                robot.lSlide1.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
-                robot.lSlide2.setPower((robot.lSlide2.getCurrentPosition() - targetSlide) * KslideMulti);
+             //   robot.lSlide1.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
+               // robot.lSlide2.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
                 telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
                 telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
+                telemetry.addData("linear slide encoder target", targetSlide);
+                telemetry.addData("V4Bar encoder target", targetV4b);
                 telemetry.addData("Dpad up", gamepad2.dpad_up);
                 telemetry.addData("Dpad right", gamepad2.dpad_right);
                 telemetry.addData("Dpad left", gamepad2.dpad_left);
@@ -169,4 +195,8 @@ public class MecanumTeleOp extends LinearOpMode {
             }
 
         }
-    }}
+
+    }
+//ttgttt
+
+}

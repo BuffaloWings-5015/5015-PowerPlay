@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -42,15 +43,19 @@ public class Definitions {
     public DcMotor rightFront = null;
     public DcMotor leftBack = null;
     public DcMotor rightBack = null;
-    public DcMotorEx v4bar1 = null;
-    public DcMotorEx v4bar2 = null;
-    public DcMotorEx v4bar3 = null;
+    public DcMotor v4bar1 = null;
     public DcMotor lSlide1 = null;
+
+    public DcMotor lSlide2 = null;
     public CRServo claw = null;
-    public final double ticks_in_degree = 537.7 / 180.0;
+    public final double ticks_in_degree = 1421.1 / 360.0 * 1.3;
+
+    public ColorSensor colorsensor = null;
 
 
     double speedMultiplier = 1;
+
+
 
 
 
@@ -78,15 +83,15 @@ public class Definitions {
         leftBack = Map.dcMotor.get("leftRear");
         rightBack = Map.dcMotor.get("rightRear");
 
-        v4bar1 = Map.get(DcMotorEx.class, "v4bar1");
-        v4bar2 = Map.get(DcMotorEx.class, "v4bar2");
-        v4bar3 = Map.get(DcMotorEx.class, "v4bar3");
+        v4bar1 = Map.get(DcMotorEx.class, "v4bar");
         lSlide1 = Map.dcMotor.get("lSlide1");
+        lSlide2 = Map.dcMotor.get("lSlide2");
         claw = Map.crservo.get("claw");
         imu = Map.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
+        colorsensor = Map.colorSensor.get("colorSensor");
     }
 
     void driveInit() {
@@ -96,8 +101,8 @@ public class Definitions {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        v4bar2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        v4bar3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Sets the motors to run through driver input instead of running to an encoder position
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -105,8 +110,9 @@ public class Definitions {
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         v4bar1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        v4bar3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        v4bar2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lSlide1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         //Sets each motor to hold its current position while having zero power set
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -114,25 +120,24 @@ public class Definitions {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         v4bar1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        v4bar3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lSlide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
+        lSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //This sets the robot to drive straight by default
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
         lSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
-        v4bar3.setDirection(DcMotorSimple.Direction.REVERSE);
-        v4bar2.setDirection(DcMotorSimple.Direction.REVERSE);
+        lSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 
     }
 
     void autoInit() {
+
+    }
+public void rotate4bar(double degrees, double power){
 
     }
 

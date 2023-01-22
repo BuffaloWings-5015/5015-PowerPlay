@@ -97,7 +97,6 @@ public class BasicOpMode_Iterative extends LinearOpMode {
             }
              */
             robot.v4bar1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            robot.v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             robot.lSlide1.setPower(gamepad2.right_stick_y);
 
@@ -116,12 +115,9 @@ public class BasicOpMode_Iterative extends LinearOpMode {
             {
                 if (gamepad2.left_stick_y != 0) {
                     robot.v4bar1.setPower(v4barpower);
-                    robot.v4bar2.setPower(v4barpower);
-                    robot.v4bar3.setPower(v4barpower);
                 }
                 else {
                     robot.v4bar1.setPower(0);
-                    robot.v4bar2.setPower(0);
                 }
                 telemetry.update();
             }

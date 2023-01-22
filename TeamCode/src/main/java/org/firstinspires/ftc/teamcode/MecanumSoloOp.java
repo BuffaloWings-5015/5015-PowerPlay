@@ -94,11 +94,11 @@ public class MecanumSoloOp extends LinearOpMode {
             }
              */
             robot.v4bar1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            robot.v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //robot.v4bar2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-                if (gamepad1.a) {
+                if (gamepad2.a) {
                     robot.lSlide1.setPower(1);
-                } else if (gamepad1.b) {
+                } else if (gamepad2.b) {
                     robot.lSlide1.setPower(-1);
                 } else {
                     robot.lSlide1.setPower(0);
@@ -114,6 +114,7 @@ public class MecanumSoloOp extends LinearOpMode {
                     robot.claw.setPower(0);
                 }
 
+                /*
             float v4barspeed;
             v4barspeed = 1 - gamepad2.right_trigger;
 
@@ -132,6 +133,7 @@ public class MecanumSoloOp extends LinearOpMode {
                                     robot.v4bar3.setPower(0);
                 }
                 telemetry.update();
+                 */
             }
 
         }

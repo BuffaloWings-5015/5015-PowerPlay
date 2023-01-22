@@ -25,7 +25,7 @@ public class PipelineNew extends OpenCvPipeline {
     }
 
     // TOPLEFT anchor point for the bounding box
-    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(640, 50);
+    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(680, 440);
 
     // Width and height for the bounding box
     public static int REGION_WIDTH = 30;
