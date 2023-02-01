@@ -65,7 +65,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
                     break;
                 case RIGHT:
                     // ... turn left
-                    motor1.setPower(-0.5);
+                    
                     break;
                 case CENTER:
                     // ...break

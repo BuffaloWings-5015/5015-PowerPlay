@@ -22,7 +22,13 @@ public class PolePipeline extends OpenCvPipeline {
         CENTER,
         RIGHT,
     }
+    public enum PoleWidth {
+        LEFT,
+        CENTER,
+        RIGHT,
+    }
     public PolePosition polePositoin = PolePosition.CENTER ;
+    public PoleWidth widthofpole =PoleWidth.CENTER;
     // TOPLEFT anchor point for the bounding box
     private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(445, 78);
 
@@ -123,16 +129,25 @@ public class PolePipeline extends OpenCvPipeline {
         String text = rect.tl().toString();
         Imgproc.putText(input, text, position, font, scale, new Scalar(0, 255, 0), thickness);
         telemetry.update();
-        int x = rect.x;
+        int x = (rect.x + rect.br().x) / 2;
         int y = rect.y;
+        int width = rect.width;
             telemetry.addData("the point", position.toString());
             telemetry.addData("thepoint's x", rect.x);
+            telemetry.addData("thepoint's width", rect.width);
             if (x <= 600) {
                 polePositoin = PolePosition.LEFT;
             } else if (x > 600 && x < 800) {
                 polePositoin = PolePosition.CENTER;
             } else if (x >= 800) {
                 polePositoin = PolePosition.RIGHT;
+            }
+            if (width <= 600) {
+                widthofpole = PoleWidth.LEFT;
+            } else if (width > 600 && width < 800) {
+                widthofpole = PoleWidth.CENTER;
+            } else if (width >= 800) {
+                widthofpole = PoleWidth.RIGHT;
             }
     }
 
@@ -154,6 +169,9 @@ public class PolePipeline extends OpenCvPipeline {
     }
     public PolePosition getCoords() {
         return polePositoin;
+    }
+    public PoleWidth getWidth() {
+        return widthofpole;
     }
     // Returns an enum being the current position where the robot will park
 
