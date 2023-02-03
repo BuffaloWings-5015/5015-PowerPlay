@@ -93,6 +93,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         
             drive.followTrajectory(traj1);
+            drive.followTrajectory(traj4);
             for (int i = 1; i < 5; i++){
             while (stage == autoStage.one){
                
@@ -136,11 +137,12 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             }
             sertSlide(0.5,1000);
             sertBar(1,(robot.ticks_in_degree * 180));
-            sleep(1000);
+            sleep(1500);
             robot.claw.setPower(1);
             sleep(500);
             robot.claw.setPower(0);
             //TODO:slide up
+            //TODO: find the encoders per inch for linear slide... NOW
             //bar up
             //drop and reset
             sertSlide(-0.5,000);
@@ -155,9 +157,11 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         else if (i > 1){
             drive.followTrajectory(traj4);
         }
+        sertSlide(0.5, 1000 - (i * 20   ));
         drive.followTrajectory(traj3);
+        robot.claw.setPower(1);
         //TODO:set slide and grab
-        sertSlide(0.5, 1000 - (i * 20));
+        
         stage = autoStage.one;
     }
 }
@@ -194,34 +198,20 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         dashboard.sendTelemetryPacket(packet);
     }
     private void goLeft(){
-        robot.leftBack.setPower(1*speedmulti);
-        robot.leftFront.setPower(-1*speedmulti);
-        robot.rightBack.setPower(-1*speedmulti);
-        robot.rightFront.setPower(1*speedmulti);
+    
+        drive.setMotorPowers(-speedmulti, speedmulti, -speedmulti, speedmulti);
     }
     private void goRight(){
-        robot.leftBack.setPower(-1*speedmulti);
-        robot.leftFront.setPower(1*speedmulti);
-        robot.rightBack.setPower(1*speedmulti);
-        robot.rightFront.setPower(-1*speedmulti);
+        drive.setMotorPowers(speedmulti, -speedmulti, speedmulti, -speedmulti);
     }
     private void goStop(){
-        robot.leftBack.setPower(0);
-        robot.leftFront.setPower(0);
-        robot.rightBack.setPower(0);
-        robot.rightFront.setPower(0);
+        drive.setMotorPowers(0, 0, 0, 0);
     }
     private void goforward(){
-        robot.leftBack.setPower(1*speedmulti);
-        robot.leftFront.setPower(1*speedmulti);
-        robot.rightBack.setPower(1*speedmulti);
-        robot.rightFront.setPower(1*speedmulti);
+        drive.setMotorPowers(speedmulti, speedmulti, speedmulti, speedmulti);
     }
     private void goBack(){
-        robot.leftBack.setPower(-1*speedmulti);
-        robot.leftFront.setPower(-1*speedmulti);
-        robot.rightBack.setPower(-1*speedmulti);
-        robot.rightFront.setPower(-1*speedmulti);
+        drive.setMotorPowers(-speedmulti, -speedmulti, -speedmulti, -speedmulti);
     }
     private void sertSlide(double slidePower, int slideTop){
         robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
