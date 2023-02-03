@@ -120,7 +120,7 @@ public class PowerplayAutoMode extends LinearOpMode {
     }
      */
 
-    private void goLeft() {
+    public void goLeft() {
         robot.leftFront.setPower(0.5);
         robot.rightFront.setPower(0.5);
         robot.leftBack.setPower(0.5);
@@ -152,7 +152,7 @@ public class PowerplayAutoMode extends LinearOpMode {
         robot.rightBack.setPower(0);
          */
     }
-    private void goRight(){
+    public void goRight(){
         robot.leftFront.setPower(0.5);
         robot.rightFront.setPower(0.5);
         robot.leftBack.setPower(0.5);
