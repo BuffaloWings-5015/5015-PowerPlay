@@ -109,7 +109,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
                     silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
                     break;
                 case RIGHT:
-                goLeft();
+                    goLeft();
                     // ... turn left
                     silly = "ma;   😡😡🤬🤬🤬🤬 ";
                     break;
