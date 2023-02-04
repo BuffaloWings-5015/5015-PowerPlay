@@ -2,20 +2,24 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name="Auto mode center pole")
+@Autonomous(name="Auto mode center pole SILLY EDITION 😂😂😂😂😂")
 public class PowerplayAutoMode2 extends LinearOpMode {
 
+    String silly = "";
     FtcDashboard dashboard;
     Definitions robot = new Definitions();
     PolePipeline detector;
@@ -26,13 +30,13 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         one,
         two
     }
+    public SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    public double speedmulti = (double) 0.2;
     @Override
     public void runOpMode() throws InterruptedException {
         autoStage stage = autoStage.one;
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         //set to starting positon and angle.toCaps()
         Pose2d startPose = new Pose2d(-36, -36, Math.toRadians(0));
-        float speedmulti = 0.2;
 
         drive.setPoseEstimate(startPose);
         robot.robotHardwareMapInit(hardwareMap);
@@ -78,51 +82,53 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         .strafeRight(6)
         .build();
         waitForStart();
-        rajectory traj5 = drive.trajectoryBuilder(new Pose2d())
+        Trajectory traj5 = drive.trajectoryBuilder(new Pose2d())
         .strafeLeft(24)
         .build();
         waitForStart();
-        rajectory traj6 = drive.trajectoryBuilder(new Pose2d())
+        Trajectory traj6 = drive.trajectoryBuilder(new Pose2d())
         .strafeRight(24)
         .build();
         waitForStart();
 
-        PolePipeline.PolePosition goopa = detector2.getPosition();
+        PipelineNew.ParkingPosition goopa = detector2.getPosition();
         sleep(1000);
         webcam.setPipeline(detector);
         dashboard = FtcDashboard.getInstance();
         
             drive.followTrajectory(traj1);
             drive.followTrajectory(traj4);
-            for (int i = 1; i < 5; i++){
+            for (double i = 1; i < 5; i++){
             while (stage == autoStage.one){
-               
+
             lineuppole:
             while (true){
             switch (detector.getCoords()) {
                 case LEFT:
                     goRight();
-                    
+                    silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
                     break;
                 case RIGHT:
                 goLeft();
                     // ... turn left
-                    
+                    silly = "ma;   😡😡🤬🤬🤬🤬 ";
                     break;
                 case CENTER:
                     // ...break
                     goStop();
-                    
+                    silly = "b  ongo 👌👌👌👌👍👍👍👍🙃🔝G💯💯💯💯💯💯💯💯💯(messi(real????)";
                     break lineuppole;
                 
             }
         }
+
             polewidther:
             while (true){
             switch (detector.getWidth()) {
                 case LEFT:
                     //  turn right
                     goforward();
+
                     break;
                 case RIGHT:
                     // ... turn left
@@ -132,11 +138,11 @@ public class PowerplayAutoMode2 extends LinearOpMode {
                     // ...break
                     goStop();
                     stage = autoStage.two; 
-                    break polewidtherpole;
+                    break polewidther;
                     
             }
             sertSlide(0.5,1000);
-            sertBar(1,(robot.ticks_in_degree * 180));
+            sertBar(1.0, (int) (robot.ticks_in_degree * 180));
             sleep(1500);
             robot.claw.setPower(1);
             sleep(500);
@@ -152,12 +158,12 @@ public class PowerplayAutoMode2 extends LinearOpMode {
 
         if ( i == 1){
             drive.followTrajectory(traj2);
-            turn(Math.toRadians(-90));
+            drive.turn(Math.toRadians(-90));
     }
         else if (i > 1){
             drive.followTrajectory(traj4);
         }
-        sertSlide(0.5, 1000 - (i * 20   ));
+                        sertSlide(0.5, (int) (1000 - (i * 20                                           )));
         drive.followTrajectory(traj3);
         robot.claw.setPower(1);
         //TODO:set slide and grab
@@ -180,11 +186,12 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             stop();
             break;
         case CENTER:
-            ////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             stop();
     }
     webcam.stopStreaming();
         handleDashboard();
+        telemetry.addData("PolePOS", silly);
         }
     private void handleDashboard() {
         TelemetryPacket packet = new TelemetryPacket();
@@ -216,15 +223,15 @@ public class PowerplayAutoMode2 extends LinearOpMode {
     private void sertSlide(double slidePower, int slideTop){
         robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
-            robot.lSlide1.setPosition(slideTop);
-            robot.lSlide2.setPosition(slideTop);
+            robot.lSlide1.setTargetPosition(slideTop);
+            robot.lSlide2.setTargetPosition(slideTop);
             robot.lSlide1.setPower(slidePower);
             robot.lSlide2.setPower(slidePower);
     }
     private void sertBar(double barPower, int barTop){
         robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);   
-            robot.v4bar1.setPosition(barTop);
+            robot.v4bar1.setTargetPosition(barTop);
             robot.v4bar1.setPower(barPower);
     }
-    
+
 }
