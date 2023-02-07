@@ -164,7 +164,12 @@ public class PolePipeline extends OpenCvPipeline {
 */
 
         // Memory cleanup
-
+        mat.release();
+        yelMat.release();
+        yelYelMat.release();
+        blurredMat.release();
+        kernel.release();
+        hierarchy.release();
         return input;
     }
     public PolePosition getCoords() {
