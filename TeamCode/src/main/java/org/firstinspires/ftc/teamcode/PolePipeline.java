@@ -123,8 +123,8 @@ public class PolePipeline extends OpenCvPipeline {
         Rect rect = Imgproc.boundingRect(contours.get(maxValIdx));
         Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(0, 255, 2), 1);
         int font = Imgproc.FONT_HERSHEY_PLAIN;
-        int scale = 1;
-        int thickness = 1;
+        int scale = 5;
+        int thickness = 5;
         position = rect.tl();
         String text = rect.tl().toString();
         Imgproc.putText(input, text, position, font, scale, new Scalar(0, 255, 0), thickness);
@@ -164,7 +164,12 @@ public class PolePipeline extends OpenCvPipeline {
 */
 
         // Memory cleanup
-
+        mat.release();
+        yelMat.release();
+        yelYelMat.release();
+        blurredMat.release();
+        kernel.release();
+        hierarchy.release();
         return input;
     }
     public PolePosition getCoords() {

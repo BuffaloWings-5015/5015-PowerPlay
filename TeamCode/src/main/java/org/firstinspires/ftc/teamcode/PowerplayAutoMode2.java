@@ -69,27 +69,29 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             }
         });
         Trajectory traj1 = drive.trajectoryBuilder(startPose, false)
-        .forward(24)
-        .strafeRight(12)
-        .build();
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end(), false)
-        .back(6)
-        .build();
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
         .back(24)
         .build();
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end(), false)
+        .forward(6)
+        .build();
+        Trajectory traj3 = drive.trajectoryBuilder(traj2.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
+        .forward(24)
+        .build();
         Trajectory traj4 = drive.trajectoryBuilder(new Pose2d())
-        .strafeRight(6)
+        .strafeLeft(6)
         .build();
         waitForStart();
         Trajectory traj5 = drive.trajectoryBuilder(new Pose2d())
-        .strafeLeft(24)
-        .build();
-        waitForStart();
-        Trajectory traj6 = drive.trajectoryBuilder(new Pose2d())
         .strafeRight(24)
         .build();
         waitForStart();
+        Trajectory traj6 = drive.trajectoryBuilder(new Pose2d())
+        .strafeLeft(24)
+        .build();
+        waitForStart();
+        Trajectory traj7 = drive.trajectoryBuilder(new Pose2d())
+        .strafeLeft(12)
+        .build();
 
         PipelineNew.ParkingPosition goopa = detector2.getPosition();
         sleep(1000);
@@ -105,11 +107,11 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             while (true){
             switch (detector.getCoords()) {
                 case LEFT:
-                    goRight();
+                    goLeft();
                     silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
                     break;
                 case RIGHT:
-                    goLeft();
+                    goRight();
                     // ... turn left
                     silly = "ma;   😡😡🤬🤬🤬🤬 ";
                     break;
@@ -127,12 +129,12 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             switch (detector.getWidth()) {
                 case LEFT:
                     //  turn right
-                    goforward();
-
+                   
+goBack();
                     break;
                 case RIGHT:
                     // ... turn left
-                    goBack();
+                     goforward();
                     break;
                 case CENTER:
                     // ...break
@@ -151,14 +153,14 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             //TODO: find the encoders per inch for linear slide... NOW
             //bar up
             //drop and reset
-            sertSlide(-0.5,000);
-            sertBar(-1,000);
+            sertSlide(0.5,000);
+            sertBar(0.5,000);
         } 
     } while (stage == autoStage.two){
 
         if ( i == 1){
             drive.followTrajectory(traj2);
-            drive.turn(Math.toRadians(-90));
+            drive.turn(Math.toRadians(90));
     }
         else if (i > 1){
             drive.followTrajectory(traj4);
@@ -186,12 +188,15 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             stop();
             break;
         case CENTER:
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////
             stop();
     }
-    webcam.stopStreaming();
-        handleDashboard();
-        telemetry.addData("PolePOS", silly);
+    
+        
+        
+        webcam.stopStreaming();telemetry.addData("PolePOS", silly);telemetry.addData("ParkPOS", goopa);telemetry.addData("PoleWidth", detector.rect.width);telemetry.update();handleDashboard();
+        
+        
         }
     private void handleDashboard() {
         TelemetryPacket packet = new TelemetryPacket();
