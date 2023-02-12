@@ -23,9 +23,9 @@ public class PolePipeline extends OpenCvPipeline {
         RIGHT,
     }
     public enum PoleWidth {
-        LEFT,
+        FAR,
         CENTER,
-        RIGHT,
+        CLOSE,
     }
     public PolePosition polePositoin = PolePosition.CENTER ;
     public PoleWidth widthofpole =PoleWidth.CENTER;
@@ -39,8 +39,8 @@ public class PolePipeline extends OpenCvPipeline {
 
     // Lower and upper boundaries for colors
     private static final Scalar
-            lower_yellow_bounds  = new Scalar(20, 120, 120),
-            upper_yellow_bounds  = new Scalar(30, 255, 255);
+            lower_yellow_bounds  = new Scalar(5, 70, 70),
+            upper_yellow_bounds  = new Scalar(50, 255, 255);
 
 
     // Color definitions
@@ -129,26 +129,28 @@ public class PolePipeline extends OpenCvPipeline {
         String text = rect.tl().toString();
         Imgproc.putText(input, text, position, font, scale, new Scalar(0, 255, 0), thickness);
         telemetry.update();
-        int x = (rect.x + rect.br().x) / 2;
+        int x = rect.x;
         int y = rect.y;
         int width = rect.width;
             telemetry.addData("the point", position.toString());
             telemetry.addData("thepoint's x", rect.x);
             telemetry.addData("thepoint's width", rect.width);
-            if (x <= 600) {
+            if (x <= 449) {
                 polePositoin = PolePosition.LEFT;
-            } else if (x > 600 && x < 800) {
+            } else if (x > 450 && x < 520) {
                 polePositoin = PolePosition.CENTER;
-            } else if (x >= 800) {
+            } else if (x >= 520) {
                 polePositoin = PolePosition.RIGHT;
             }
             if (width <= 600) {
-                widthofpole = PoleWidth.LEFT;
-            } else if (width > 600 && width < 800) {
+                widthofpole = PoleWidth.FAR;
+            } else if (width > 640 && width < 660) {
                 widthofpole = PoleWidth.CENTER;
             } else if (width >= 800) {
-                widthofpole = PoleWidth.RIGHT;
+                widthofpole = PoleWidth.CLOSE;
             }
+            telemetry.addData("horiz pos: ", polePositoin);
+            telemetry.addData("width pos: ", widthofpole);
     }
 
         /*
@@ -169,7 +171,6 @@ public class PolePipeline extends OpenCvPipeline {
         yelYelMat.release();
         blurredMat.release();
         kernel.release();
-        hierarchy.release();
         return input;
     }
     public PolePosition getCoords() {

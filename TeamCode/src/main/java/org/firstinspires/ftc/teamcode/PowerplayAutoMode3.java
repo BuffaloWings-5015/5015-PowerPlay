@@ -1,31 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.sun.tools.javac.comp.DeferredAttr;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name="Auto mode center pole SILLY EDITION 😂😂😂😂😂")
-public class PowerplayAutoMode2 extends LinearOpMode {
+@Autonomous(name="Test Center 😂😂😂😂😂")
+public class PowerplayAutoMode3 extends LinearOpMode {
 
     String silly = "";
     FtcDashboard dashboard;
-    //Definitions robot = new Definitions();
+
     PolePipeline detector;
     PipelineNew detector2;
-    Definitions robot;
 
 
     enum autoStage {
@@ -33,13 +27,13 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         two
     }
 
-    public double speedmulti = (double) 0.2;
+    public double speedmulti = (double) 0.3;
     @Override
     public void runOpMode() throws InterruptedException {
         Definitions robot = new Definitions();
+        //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         OpenCvCamera webcam;
         autoStage stage = autoStage.one;
         //set to starting positon and angle.toCaps()
@@ -76,109 +70,101 @@ public class PowerplayAutoMode2 extends LinearOpMode {
                  */
             }
         });
-        Pose2d startPose = new Pose2d(-36, -60, Math.toRadians(-90));
-        Trajectory traj1 = drive.trajectoryBuilder(startPose, false)
-                .back(48)
+        /*
+        TrajectorySequence untitled = drive.trajectorySequenceBuilder(new Pose2d(-36.79, -65.23, Math.toRadians(268.21)))
+                .lineToSplineHeading(new Pose2d(-35.66, -11.29, Math.toRadians(264.81)))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(-23.70, -11.29, Math.toRadians(268.53)))
                 .build();
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end(),false)
-                .strafeLeft(12)
+        drive.setPoseEstimate(untitled.start());
+        TrajectorySequence untitled2 = drive.trajectorySequenceBuilder(new Pose2d(-23.70,-11.29,Math.toRadians(268.53)))
+                .waitSeconds(0.5)
+                .lineToSplineHeading(new Pose2d(-60.36, -11.96, Math.toRadians(180.00)))
                 .build();
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end().plus(new Pose2d(0, 0, Math.toRadians(-90))),false)
-                .forward(48)
-                .build();
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end(),false)
-                .back(24)
-                .build();
-        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(),false)
-                .strafeRight(12)
-                .build();
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end(), false)
-                .strafeLeft(12)
-                .build();
-
+*/
         waitForStart();
 
+        //drive.followTrajectorySequence(untitled);
 
-
-        dashboard = FtcDashboard.getInstance();
-
-            drive.followTrajectory(traj1);
-            drive.followTrajectory(traj2);
-            for (double i = 1; i < 5; i++){
-            while (stage == autoStage.one){
-
-            lineuppole:
-            while (true){
+        lineuppole:
+        while (true){
             switch (detector.getCoords()) {
                 case LEFT:
-                    drive.setMotorPowers(-speedmulti, speedmulti, -speedmulti, speedmulti);
-                    silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
+                    robot.leftFront.setPower(-0.3);
+                    robot.leftBack.setPower(0.3);
+                    robot.rightFront.setPower(0.3);
+                    robot.rightBack.setPower(-0.3);
                     break;
                 case RIGHT:
-                    drive.setMotorPowers(speedmulti, -speedmulti, speedmulti, -speedmulti);
-                    // ... turn left
-                    silly = "ma;   😡😡🤬🤬🤬🤬 ";
+                    robot.leftFront.setPower(0.3);
+                    robot.leftBack.setPower(-0.3);
+                    robot.rightFront.setPower(-0.3);
+                    robot.rightBack.setPower(0.3);
                     break;
                 case CENTER:
                     // ...break
-                    drive.setMotorPowers(0, 0, 0, 0);
+                    robot.leftFront.setPower(0);
+                    robot.leftBack.setPower(0);
+                    robot.rightFront.setPower(0);
+                    robot.rightBack.setPower(0);
                     silly = "b  ongo 👌👌👌👌👍👍👍👍🙃🔝G💯💯💯💯💯💯💯💯💯(messi(real????)";
                     break lineuppole;
 
             }
         }
 
-            polewidther:
-            while (true){
+        polewidther:
+        while (true) {
             switch (detector.getWidth()) {
-                case CLOSE:
-                    //  turn right
-
-                    drive.setMotorPowers(-speedmulti, -speedmulti, -speedmulti, -speedmulti);
-                    break;
                 case FAR:
+                    //  turn right
+                    robot.leftFront.setPower(0.3);
+                    robot.leftBack.setPower(0.3);
+                    robot.rightFront.setPower(0.3);
+                    robot.rightBack.setPower(0.3);
+
+                    break;
+                case CLOSE:
                     // ... turn left
-                    drive.setMotorPowers(speedmulti, speedmulti, speedmulti, speedmulti);
+                    robot.leftFront.setPower(-0.3);
+                    robot.leftBack.setPower(-0.3);
+                    robot.rightFront.setPower(-0.3);
+                    robot.rightBack.setPower(-0.3);
                     break;
                 case CENTER:
                     // ...break
-                    drive.setMotorPowers(0, 0, 0, 0);
-                    stage = autoStage.two;
+                    robot.leftFront.setPower(0);
+                    robot.leftBack.setPower(0);
+                    robot.rightFront.setPower(0);
+                    robot.rightBack.setPower(0);
                     break polewidther;
 
             }
-
-
-
-
-        }
-                sertSlide(0.7,1200);
-                sertBar(1,800);
-    } while (stage == autoStage.two){
-
-        if (i==1){
-            drive.turn(Math.toRadians(-90));
-            drive.followTrajectory(traj3);
-        } else if (i > 1){
-            drive.followTrajectory(traj6);
         }
 
 
 
-                    //grab
-            drive.followTrajectory(traj4);
-            drive.followTrajectory(traj5);
+        dashboard = FtcDashboard.getInstance();
+       /* horizpole:
+        while (true){
+            switch (detector.getCoords()) {
+                case CENTER:
+                    //
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    break horizpole;
+                case RIGHT:
+                    //
+                    drive.setMotorPowers(speedmulti, speedmulti, speedmulti, speedmulti);
 
-        /*
-                        sertSlide(0.5, (int) (1000 - (i * 20                                           )));
-        drive.followTrajectory(traj3);
-        robot.claw.setPower(1);
-        */
-        //TODO:set slide and grab
+                    break;
+                case LEFT:
+                    //
+                    drive.setMotorPowers(-speedmulti, -speedmulti, -speedmulti, -speedmulti);
+                    break;
 
-        stage = autoStage.one;
-    }
-}
+
+            }
+        }
 /*
     switch (goopa) {
         case NOT_FOUND:
@@ -206,7 +192,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         }
 
 
-
+/*
     private void sertSlide(double slidePower, int slideTop){
         robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
@@ -216,11 +202,12 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             robot.lSlide2.setPower(slidePower);
     }
     private void sertBar(double barPower, int barTop){
-        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);   
+        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.v4bar1.setTargetPosition(barTop);
             robot.v4bar1.setPower(barPower);
 
 
     }
+    */
 
 }

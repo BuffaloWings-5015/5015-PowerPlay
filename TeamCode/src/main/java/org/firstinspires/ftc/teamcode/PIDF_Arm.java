@@ -21,7 +21,8 @@ public class PIDF_Arm extends OpMode {
 
     //PID Measurements
     double armPos;
-
+    double targetArm;
+    double armTarget;
 
 
     @Override
@@ -39,7 +40,7 @@ public class PIDF_Arm extends OpMode {
     public void loop() {
         armPos = robot.v4bar1.getCurrentPosition();
         
-        controller.setPID(KP, kI, KD);
+        controller.setPID(kP, kI, kD);
 
         targetArm = armTarget;
 

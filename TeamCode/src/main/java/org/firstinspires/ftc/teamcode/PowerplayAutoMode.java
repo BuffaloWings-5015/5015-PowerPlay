@@ -102,6 +102,7 @@ public class PowerplayAutoMode extends LinearOpMode {
                 stop();
         }
         webcam.stopStreaming();
+
     }
     private void handleDashboard() {
         TelemetryPacket packet = new TelemetryPacket();

@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp
-public class MecanumTeleOp2 extends LinearOpMode {
+@TeleOp(name="🎂🎂🎂🌹🌹🌹💋💋💋😃😃😃✔✔👀👀")
+public class MecanumTeleOp3 extends LinearOpMode {
+    Definitions robot;
     @Override
+
 
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -36,7 +39,12 @@ public class MecanumTeleOp2 extends LinearOpMode {
         fbConst = 0;
         targetSlide = 0;
         targetV4b = 0;
-
+        robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lSlide1.setTargetPosition(0);
+        robot.lSlide2.setTargetPosition(0);
+        robot.v4bar1.setTargetPosition(0);
         waitForStart();
         float speedMultiplier = 1-gamepad1.right_trigger;
         if (isStopRequested()) return;
@@ -65,43 +73,6 @@ public class MecanumTeleOp2 extends LinearOpMode {
             robot.leftBack.setPower(backLeftPower*speedMultiplier);
             robot.rightFront.setPower(frontRightPower*speedMultiplier);
             robot.rightBack.setPower(backRightPower*speedMultiplier);
-            /*
-            if (gamepad2.right_stick_y > 0) {
-                if (robot.lSlide1.getCurrentPosition() < 10000) {
-                    robot.lSlide1.setPower(gamepad2.right_stick_y);
-                    robot.lSlide2.setPower(gamepad2.right_stick_y);
-                    telemetry.addData("lslide encoder", robot.lSlide1.getCurrentPosition());
-                    telemetry.addData("lslide encoder2", robot.lSlide2.getCurrentPosition());
-                }
-                if (gamepad2.a || gamepad2. b){
-                    if (gamepad2.a){
-                        robot.lSlide1.setPower(0.5);
-                    }
-                    if (gamepad2.b){
-                        robot.lSlide1.setPower(-0.5);
-                    }
-                }
-            } else if (gamepad2.right_stick_y < 0) {
-                if (robot.lSlide1.getCurrentPosition() > 0) {
-                    robot.lSlide1.setPower(gamepad2.right_stick_y);
-                    telemetry.addData("lslide encoder", robot.lSlide1.getCurrentPosition());
-                    telemetry.addData("lslide encoder2", robot.lSlide2.getCurrentPosition());
-                }
-                if (robot.lSlide2.getCurrentPosition() > 0) {
-                    robot.lSlide2.setPower(gamepad2.right_stick_y);
-                    telemetry.addData("lslide encoder", robot.lSlide1.getCurrentPosition());
-                    telemetry.addData("lslide encoder2", robot.lSlide2.getCurrentPosition());
-                }
-
-
-            } else {
-                robot.lSlide1.setPower(0);
-                robot.lSlide2.setPower(0);
-            }
-             */
-            //robot.v4bar1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-                //robot.lSlide1.setPower(gamepad2.right_stick_y);
 
 
                 if (gamepad2.left_bumper) {
@@ -134,28 +105,28 @@ public class MecanumTeleOp2 extends LinearOpMode {
                 fbConst = 0;
             }
             if (gamepad2.dpad_up){
-                targetSlide = 450;
-                targetV4b = -1250;
-                fbConst = 0;
+                robot.lSlide1.setTargetPosition(800);
+                robot.lSlide2.setTargetPosition(800);
+                robot.v4bar1.setTargetPosition(1200);
             }
             if (gamepad2.dpad_right){
                 targetSlide = 800;
                 targetV4b = -1250;
                 fbConst = 0;
             }
-            if (gamepad2.dpad_down){
-                targetSlide = 0;
-                targetV4b = 0;
-                fbConst = -0.25;
-            }
+            if (gamepad2.dpad_down) {
 
-            //targetSlide += gamepad2.left_stick_y;
+                robot.lSlide1.setTargetPosition(0);
+                robot.lSlide2.setTargetPosition(0);
+                robot.v4bar1.setTargetPosition(0);
+            }
+            targetSlide += gamepad2.left_stick_y;
             targetV4b += gamepad2.right_stick_y * -8;
 
 
             final double KslideMulti;
             final double KV4bMulti;
-            KslideMulti = 0.025;
+            KslideMulti = -0.025;
             KV4bMulti = -0.001;
 
          /*
@@ -178,10 +149,12 @@ public class MecanumTeleOp2 extends LinearOpMode {
                 robot.lSlide1.setPower(0);
             }
 
-            if (true){
-                robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti + fbConst);
-             //   robot.lSlide1.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
-               // robot.lSlide2.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
+                robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+               // robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti + fbConst);
+            // robot.lSlide1.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
+               //robot.lSlide2.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
+
                 telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
                 telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
                 telemetry.addData("linear slide encoder target", targetSlide);
@@ -191,12 +164,15 @@ public class MecanumTeleOp2 extends LinearOpMode {
                 telemetry.addData("Dpad left", gamepad2.dpad_left);
                 telemetry.addData("Dpad down", gamepad2.dpad_down);
                 telemetry.update();
+                robot.lSlide1.setPower(1);
+                robot.lSlide2.setPower(1);
+                robot.v4bar1.setPower(1);
 
-            }
 
         }
 
     }
 //ttgttt
+
 
 }
