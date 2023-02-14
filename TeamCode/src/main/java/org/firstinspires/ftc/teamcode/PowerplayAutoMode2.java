@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.sun.tools.javac.comp.DeferredAttr;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -21,34 +22,41 @@ public class PowerplayAutoMode2 extends LinearOpMode {
 
     String pos = "";
     FtcDashboard dashboard;
-    Definitions robot = new Definitions();
+    //Definitions robot = new Definitions();
     PolePipeline detector;
     PipelineNew detector2;
-    private OpenCvCamera webcam;
-    private DcMotor motor1 = null;
+    Definitions robot;
+
+
     enum autoStage {
         one,
         two
     }
-    public SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
     public double speedmulti = (double) 0.2;
     @Override
     public void runOpMode() throws InterruptedException {
-        autoStage stage = autoStage.one;
-        //set to starting positon and angle.toCaps()
-        Pose2d startPose = new Pose2d(-36, -36, Math.toRadians(0));
-
-        drive.setPoseEstimate(startPose);
+        Definitions robot = new Definitions();
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
-        OpenCvWebcam webcam;
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        OpenCvCamera webcam;
+        autoStage stage = autoStage.one;
+        //set to starting positon and angle.toCaps()
+
+        /*
+        robot.robotHardwareMapInit(hardwareMap);
+        robot.driveInit();
+        */
+
+
         int cameraMonitorViewId = hardwareMap.appContext
                 .getResources().getIdentifier("cameraMonitorViewId",
                         "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class,
                 "Webcam 1"), cameraMonitorViewId);
         PolePipeline detector = new PolePipeline(telemetry);
-        webcam.setPipeline(detector2);
+        webcam.setPipeline(detector);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
 
@@ -69,36 +77,35 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             }
             
         });
+        Pose2d startPose = new Pose2d(-36, -60, Math.toRadians(-90));
         Trajectory traj1 = drive.trajectoryBuilder(startPose, false)
-        .forward(24)
-        .strafeRight(12)
-        .build();
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end(), false)
-        .back(6)
-        .build();
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
-        .back(24)
-        .build();
-        Trajectory traj4 = drive.trajectoryBuilder(new Pose2d())
-        .strafeRight(6)
-        .build();
-        waitForStart();
-        Trajectory traj5 = drive.trajectoryBuilder(new Pose2d())
-        .strafeLeft(24)
-        .build();
-        waitForStart();
-        Trajectory traj6 = drive.trajectoryBuilder(new Pose2d())
-        .strafeRight(24)
-        .build();
+                .back(48)
+                .build();
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end(),false)
+                .strafeLeft(12)
+                .build();
+        Trajectory traj3 = drive.trajectoryBuilder(traj2.end().plus(new Pose2d(0, 0, Math.toRadians(-90))),false)
+                .forward(48)
+                .build();
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end(),false)
+                .back(24)
+                .build();
+        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(),false)
+                .strafeRight(12)
+                .build();
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end(), false)
+                .strafeLeft(12)
+                .build();
+
         waitForStart();
 
-        PipelineNew.ParkingPosition parkingPosition = detector2.getPosition();
+        PipelineNew.ParkingPosition goopa = detector2.getPosition();
         sleep(1000);
         webcam.setPipeline(detector);
         dashboard = FtcDashboard.getInstance();
-        
+
             drive.followTrajectory(traj1);
-            drive.followTrajectory(traj4);
+            drive.followTrajectory(traj2);
             for (double i = 1; i < 5; i++){
             while (stage == autoStage.one){
 
@@ -107,40 +114,40 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             switch (detector.getCoords()) {
                 case LEFT:
                     goRight();
-                    pos = "TOO FAR leFT!!!🤬  ";
+                    silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
                     break;
                 case RIGHT:
-                    goLeft();
+                    drive.setMotorPowers(speedmulti, -speedmulti, speedmulti, -speedmulti);
                     // ... turn left
                     pos = "TOO FAR RIGHT 🤬 ";
                     break;
                 case CENTER:
                     // ...break
                     goStop();
-                    pos = "Perfect 👌🔝G💯";
+                    silly = "b  ongo 👌👌👌👌👍👍👍👍🙃🔝G💯💯💯💯💯💯💯💯💯(messi(real????)";
                     break lineuppole;
-                
+
             }
         }
 
             polewidther:
             while (true){
             switch (detector.getWidth()) {
-                case LEFT:
+                case CLOSE:
                     //  turn right
-                    goforward();
 
+                    drive.setMotorPowers(-speedmulti, -speedmulti, -speedmulti, -speedmulti);
                     break;
-                case RIGHT:
+                case FAR:
                     // ... turn left
-                    goBack();
+                    drive.setMotorPowers(speedmulti, speedmulti, speedmulti, speedmulti);
                     break;
                 case CENTER:
                     // ...break
-                    goStop();
-                    stage = autoStage.two; 
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    stage = autoStage.two;
                     break polewidther;
-                    
+
             }
             sertSlide(0.5,1000);
             sertBar(1.0, (int) (robot.ticks_in_degree * 180));
@@ -150,45 +157,36 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             robot.claw.setPower(0);
             //TODO:slide up
             //TODO: find the encoders per inch for linear slide... NOW
-            robot.lSlide1.getPosition();
-            robot.lSlide2.getPosition();
-
-            targetSlide = 800;
-            targetV4b = -1250;
-
-            final double KslideMulti;
-            final double KV4bMulti;
-            KslideMulti = 0.025;
-            KV4bMulti = -0.001;
-
             //bar up
-            robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti);
-            robot.lSlide1.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
-            robot.lSlide2.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
-
             //drop and reset
             sertSlide(-0.5,000);
             sertBar(-1,000);
         } 
     } while (stage == autoStage.two){
 
-        if ( i == 1){
-            drive.followTrajectory(traj2);
+        if (i==1){
             drive.turn(Math.toRadians(-90));
-    }
-        else if (i > 1){
+            drive.followTrajectory(traj3);
+        } else if (i > 1){
+            drive.followTrajectory(traj6);
+        }
+
+
+
+                    //grab
             drive.followTrajectory(traj4);
         }
-        sertSlide(0.5, (int) (1000 - (i * 20)));
+                        sertSlide(0.5, (int) (1000 - (i * 20                                           )));
         drive.followTrajectory(traj3);
         robot.claw.setPower(1);
+        */
         //TODO:set slide and grab
-        
+
         stage = autoStage.one;
     }
-}
+    }
     
-    switch (ParkingPosition) {
+    switch (goopa) {
         case NOT_FOUND:
             stop();
 
@@ -202,39 +200,16 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             break;
 
         case CENTER:
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             stop();
     }
     webcam.stopStreaming();
         handleDashboard();
-        telemetry.addData("PolePOS", pos);
+        telemetry.addData("PolePOS", silly);
         }
-    private void handleDashboard() {
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Frame Count", webcam.getFrameCount());
-        packet.put("FPS", String.format("%.2f", webcam.getFps()));
-        packet.put("Total frame time ms", webcam.getTotalFrameTimeMs());
-        packet.put("Pipeline time ms", webcam.getPipelineTimeMs());
-        packet.put("Overhead time ms", webcam.getOverheadTimeMs());
-        packet.put("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
 
-        dashboard.sendTelemetryPacket(packet);
-    }
-    private void goLeft(){
-    
-        drive.setMotorPowers(-speedmulti, speedmulti, -speedmulti, speedmulti);
-    }
-    private void goRight(){
-        drive.setMotorPowers(speedmulti, -speedmulti, speedmulti, -speedmulti);
-    }
-    private void goStop(){
-        drive.setMotorPowers(0, 0, 0, 0);
-    }
-    private void goforward(){
-        drive.setMotorPowers(speedmulti, speedmulti, speedmulti, speedmulti);
-    }
-    private void goBack(){
-        drive.setMotorPowers(-speedmulti, -speedmulti, -speedmulti, -speedmulti);
-    }
+
+
     private void sertSlide(double slidePower, int slideTop){
         robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
@@ -247,6 +222,9 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);   
             robot.v4bar1.setTargetPosition(barTop);
             robot.v4bar1.setPower(barPower);
+
+
     }
 
+}
 }
