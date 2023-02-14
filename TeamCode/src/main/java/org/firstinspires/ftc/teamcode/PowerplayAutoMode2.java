@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name="Auto mode center pole SILLY EDITION 😂😂😂😂😂")
-public class PowerplayAutoMode2 extends LinearOpMode {
+public class PowerplayAutoMode2 extends LinearOpMode { 
 
     String pos = "";
     FtcDashboard dashboard;
@@ -67,6 +67,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
                  * This will be called if the camera could not be opened
                  */
             }
+            
         });
         Trajectory traj1 = drive.trajectoryBuilder(startPose, false)
         .forward(24)
@@ -91,7 +92,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         .build();
         waitForStart();
 
-        PipelineNew.ParkingPosition goopa = detector2.getPosition();
+        PipelineNew.ParkingPosition parkingPosition = detector2.getPosition();
         sleep(1000);
         webcam.setPipeline(detector);
         dashboard = FtcDashboard.getInstance();
@@ -106,17 +107,17 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             switch (detector.getCoords()) {
                 case LEFT:
                     goRight();
-                    silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
+                    pos = "TOO FAR leFT!!!🤬  ";
                     break;
                 case RIGHT:
                     goLeft();
                     // ... turn left
-                    silly = "ma;   😡😡🤬🤬🤬🤬 ";
+                    pos = "TOO FAR RIGHT 🤬 ";
                     break;
                 case CENTER:
                     // ...break
                     goStop();
-                    silly = "b  ongo 👌👌👌👌👍👍👍👍🙃🔝G💯💯💯💯💯💯💯💯💯(messi(real????)";
+                    pos = "Perfect 👌🔝G💯";
                     break lineuppole;
                 
             }
@@ -149,7 +150,22 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             robot.claw.setPower(0);
             //TODO:slide up
             //TODO: find the encoders per inch for linear slide... NOW
+            robot.lSlide1.getPosition();
+            robot.lSlide2.getPosition();
+
+            targetSlide = 800;
+            targetV4b = -1250;
+
+            final double KslideMulti;
+            final double KV4bMulti;
+            KslideMulti = 0.025;
+            KV4bMulti = -0.001;
+
             //bar up
+            robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti);
+            robot.lSlide1.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
+            robot.lSlide2.setPower(Range.clip((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti, -0.5, 0.5));
+
             //drop and reset
             sertSlide(-0.5,000);
             sertBar(-1,000);
@@ -163,7 +179,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
         else if (i > 1){
             drive.followTrajectory(traj4);
         }
-                        sertSlide(0.5, (int) (1000 - (i * 20                                           )));
+        sertSlide(0.5, (int) (1000 - (i * 20)));
         drive.followTrajectory(traj3);
         robot.claw.setPower(1);
         //TODO:set slide and grab
@@ -172,26 +188,25 @@ public class PowerplayAutoMode2 extends LinearOpMode {
     }
 }
     
-    switch (goopa) {
+    switch (ParkingPosition) {
         case NOT_FOUND:
-            ///////////
             stop();
+
         case LEFT:
-            // ...
             drive.followTrajectory(traj5);
             break;
+
         case RIGHT:
-            // ...
             drive.followTrajectory(traj6);
             stop();
             break;
+
         case CENTER:
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             stop();
     }
     webcam.stopStreaming();
         handleDashboard();
-        telemetry.addData("PolePOS", silly);
+        telemetry.addData("PolePOS", pos);
         }
     private void handleDashboard() {
         TelemetryPacket packet = new TelemetryPacket();
