@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Auto mode center pole SILLY EDITION 😂😂😂😂😂")
 public class PowerplayAutoMode2 extends LinearOpMode {
 
-    String silly = "";
+    String polePos = "";
     FtcDashboard dashboard;
     //Definitions robot = new Definitions();
     PolePipeline detector;
@@ -112,17 +112,17 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             switch (detector.getCoords()) {
                 case LEFT:
                     drive.setMotorPowers(-speedmulti, speedmulti, -speedmulti, speedmulti);
-                    silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
+                    polePos = "left";
                     break;
                 case RIGHT:
                     drive.setMotorPowers(speedmulti, -speedmulti, speedmulti, -speedmulti);
                     // ... turn left
-                    silly = "ma;   😡😡🤬🤬🤬🤬 ";
+                    polePos = "right";
                     break;
                 case CENTER:
                     // ...break
                     drive.setMotorPowers(0, 0, 0, 0);
-                    silly = "b  ongo 👌👌👌👌👍👍👍👍🙃🔝G💯💯💯💯💯💯💯💯💯(messi(real????)";
+                    polePos = "perfect👌🔝G💯";
                     break lineuppole;
 
             }
@@ -200,7 +200,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
 */
 
 
-        webcam.stopStreaming();telemetry.addData("PolePOS", silly);telemetry.update();
+        webcam.stopStreaming();telemetry.addData("PolePOS", polePos);telemetry.update();
 
 
         }
