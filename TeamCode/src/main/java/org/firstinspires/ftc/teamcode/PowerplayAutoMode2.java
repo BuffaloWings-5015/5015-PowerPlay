@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Auto mode center pole SILLY EDITION 😂😂😂😂😂")
 public class PowerplayAutoMode2 extends LinearOpMode {
 
-    String silly = "";
+    String pos = "";
     FtcDashboard dashboard;
     Definitions robot = new Definitions();
     PolePipeline detector;
