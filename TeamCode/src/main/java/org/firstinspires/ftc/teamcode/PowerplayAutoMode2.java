@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Auto mode center pole SILLY EDITION 😂😂😂😂😂")
 public class PowerplayAutoMode2 extends LinearOpMode { 
 
-    String pos = "";
+    String silly = "";
     FtcDashboard dashboard;
     //Definitions robot = new Definitions();
     PolePipeline detector;
@@ -113,17 +113,17 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             while (true){
             switch (detector.getCoords()) {
                 case LEFT:
-                    goRight();
+                    drive.setMotorPowers(-speedmulti, speedmulti, -speedmulti, speedmulti);
                     silly = "ma; 😡😡🤬🤬🤬🤬🤬  ";
                     break;
                 case RIGHT:
                     drive.setMotorPowers(speedmulti, -speedmulti, speedmulti, -speedmulti);
                     // ... turn left
-                    pos = "TOO FAR RIGHT 🤬 ";
+                    silly = "ma;   😡😡🤬🤬🤬🤬 ";
                     break;
                 case CENTER:
                     // ...break
-                    goStop();
+                    drive.setMotorPowers(0, 0, 0, 0);
                     silly = "b  ongo 👌👌👌👌👍👍👍👍🙃🔝G💯💯💯💯💯💯💯💯💯(messi(real????)";
                     break lineuppole;
 
@@ -203,9 +203,12 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             stop();
     }
-    webcam.stopStreaming();
-        handleDashboard();
-        telemetry.addData("PolePOS", silly);
+*/
+
+
+        webcam.stopStreaming();telemetry.addData("PolePOS", silly);telemetry.update();
+
+
         }
 
 
