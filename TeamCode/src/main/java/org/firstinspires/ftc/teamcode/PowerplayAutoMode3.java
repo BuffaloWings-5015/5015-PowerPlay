@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -17,7 +19,7 @@ public class PowerplayAutoMode3 extends LinearOpMode {
 
     String silly = "";
     FtcDashboard dashboard;
-
+Definitions robot;
     PolePipeline detector;
     PipelineNew detector2;
 
@@ -31,18 +33,18 @@ public class PowerplayAutoMode3 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Definitions robot = new Definitions();
-        //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
         OpenCvCamera webcam;
         autoStage stage = autoStage.one;
-        double[] poseValues = calculateRobotPose(d_left, d_front, d_right);
-        double x = poseValues[0];
-        double y = poseValues[1];
-        double heading = poseValues[2];
+        //double[] poseValues = calculateRobotPose(d_left, d_front, d_right);
+        //double x = poseValues[0];
+        //double y = poseValues[1];
+       // double heading = poseValues[2];
 
 // Create a new Pose2d object with the calculated pose
-Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
+//Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
         //set to starting positon and angle.toCaps()
 
         /*
@@ -76,7 +78,7 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
             }
         });
         TrajectorySequence Auto = drive.trajectorySequenceBuilder(new Pose2d(35.03, -62.03, Math.toRadians(90.00)))
-        .lineTo(new Vector2d(33.15, -8.74), Math.toRadians(-45))
+        .lineTo(new Vector2d(33.15, -8.74))
         .splineTo(new Vector2d(47.74, -12.64), Math.toRadians(-11.11))
         .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
         //fetch new cone
@@ -94,7 +96,7 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
         .build();
         waitForStart();
 
-        drive.followTrajectorySequence(auto);
+
 
 
 
@@ -145,11 +147,11 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
 
 
         }
-        public static double[] calculateRobotPose(double d_left, double d_front, double d_right) {
+       /* public static double[] calculateRobotPose(double d_left, double d_front, double d_right) {
             double x, y, theta;
         
             // Calculate x
-            x = (60 - 8) - d_front * Math.sin(theta);
+           // x = (60 - 8) - d_front * Math.sin(theta);
         
             // Calculate y
             y = (60 - 8) - d_left + d_right;
@@ -163,6 +165,7 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
             // Return x, y, and theta as an array
             return new double[] { x, y, theta };
         }
+        */
         public void barMoveToEncoderPosition(double power, int targetEncoderPos) {
             // Reset the robot.lSlide1 encoder count to zero
             robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

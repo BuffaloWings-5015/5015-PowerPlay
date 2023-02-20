@@ -75,7 +75,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
                  * This will be called if the camera could not be opened
                  */
             }
-            
+
         });
         Pose2d startPose = new Pose2d(-36, -60, Math.toRadians(-90));
         Trajectory traj1 = drive.trajectoryBuilder(startPose, false)
@@ -161,7 +161,7 @@ public class PowerplayAutoMode2 extends LinearOpMode {
             //drop and reset
             sertSlide(-0.5,000);
             sertBar(-1,000);
-        } 
+        }
     } while (stage == autoStage.two){
 
         if (i==1){
@@ -179,13 +179,13 @@ public class PowerplayAutoMode2 extends LinearOpMode {
                         sertSlide(0.5, (int) (1000 - (i * 20                                           )));
         drive.followTrajectory(traj3);
         robot.claw.setPower(1);
-        */
+
         //TODO:set slide and grab
 
         stage = autoStage.one;
     }
     }
-    
+    /*
     switch (goopa) {
         case NOT_FOUND:
             stop();
@@ -206,28 +206,27 @@ public class PowerplayAutoMode2 extends LinearOpMode {
 */
 
 
-        webcam.stopStreaming();telemetry.addData("PolePOS", silly);telemetry.update();
+    // webcam.stopStreaming();telemetry.addData("PolePOS", silly);telemetry.update();
 
 
-        }
+
 
 
 
     private void sertSlide(double slidePower, int slideTop){
-        robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
-            robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);  
+        robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide1.setTargetPosition(slideTop);
             robot.lSlide2.setTargetPosition(slideTop);
             robot.lSlide1.setPower(slidePower);
             robot.lSlide2.setPower(slidePower);
     }
     private void sertBar(double barPower, int barTop){
-        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);   
+        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.v4bar1.setTargetPosition(barTop);
             robot.v4bar1.setPower(barPower);
 
 
     }
 
-}
 }
