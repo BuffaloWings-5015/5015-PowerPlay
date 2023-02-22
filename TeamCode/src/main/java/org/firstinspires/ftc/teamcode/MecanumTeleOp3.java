@@ -151,6 +151,7 @@ public class MecanumTeleOp3 extends LinearOpMode {
 
                 robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
                // robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti + fbConst);
             // robot.lSlide1.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
                //robot.lSlide2.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);

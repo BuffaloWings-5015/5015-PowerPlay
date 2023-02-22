@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.MotionLibrary.movement.MecanumDriveEncoders;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -87,30 +89,45 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
         });
 
 
-        TrajectorySequence auto = drive.trajectorySequenceBuilder(new Pose2d(35.03, -62.03, Math.toRadians(90.00)))
-        .lineToLinearHeading(new Pose2d(33.15, -8.74, Math.toRadians(-45)))
-        .splineTo(new Vector2d(47.74, -12.64), Math.toRadians(-11.11))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        //fetch new cone
-        .splineTo(new Vector2d(48.17, -12.64), Math.toRadians(0))
-        //dunk new cone
-        .splineTo(new Vector2d(33.44, -8.74), Math.toRadians(-45.00))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .splineTo(new Vector2d(47.45, -13.36), Math.toRadians(-11.11))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        //fetch new cone
-        .splineTo(new Vector2d(47.30, -13.07), Math.toRadians(0))
-        //dunk new cone
-        .splineTo(new Vector2d(32.71, -8.59), Math.toRadians(-45.00))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .build();
+
+
+        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-36.79, -65.00, Math.toRadians(270.00)))
+                .lineToLinearHeading(new Pose2d(-36.56, -21.99, Math.toRadians(270.00)))
+                .lineTo(new Vector2d(-25.38, -21.25))
+                .build();
+        drive.setPoseEstimate(untitled0.start());
         waitForStart();
+        robot.claw.setPower(1);
+        sleep(1000);
+        robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        drive.followTrajectorySequence(auto);
-
-
-
+        robot.lSlide1.setTargetPosition(800);
+        robot.lSlide2.setTargetPosition(800);
+        robot.v4bar1.setTargetPosition(1200);
+        robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide1.setPower(-1);
+        robot.lSlide2.setPower(-1);
+        robot.v4bar1.setPower(1);
+        drive.followTrajectorySequence(untitled0);
+        sleep(250);
+        robot.lSlide1.setPower(0);
+        robot.lSlide2.setPower(0);
+        robot.v4bar1.setPower(0);
+        robot.lSlide1.setTargetPosition(0);
+        robot.lSlide2.setTargetPosition(0);
+        robot.v4bar1.setTargetPosition(0);
+        robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide1.setPower(0.5);
+        robot.lSlide2.setPower(0.5);
+        robot.v4bar1.setPower(1);
+        sleep(10000);
         dashboard = FtcDashboard.getInstance();
        /* horizpole:
         while (true){
