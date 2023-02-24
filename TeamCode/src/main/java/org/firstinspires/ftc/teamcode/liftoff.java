@@ -11,9 +11,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 @TeleOp(name = "liftoff ai")
-public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
+public class liftoff extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "sdcard/FIRST/tflitemodels/Runway.tflite";
+    private static final String TFOD_MODEL_ASSET = "sdcard/FIRST/tflitemodels/RunwayV1.tflite";
 
     private static final String[] LABELS = {
             "red cone",
