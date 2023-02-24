@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
-@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+@TeleOp(name = "liftoff ai")
 public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "sdcard/FIRST/tflitemodels/Runway.tflite";
