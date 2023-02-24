@@ -3,25 +3,32 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.MotionLibrary.movement.MecanumDriveEncoders;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="Test Center 😂😂😂😂😂")
-public class PowerplayAutoMode3 extends LinearOpMode {
+@Autonomous(name="Test Center 2 😂😂😂😂😂")
+public class PowerplayAutoMode4 extends LinearOpMode {
 
     String silly = "";
     FtcDashboard dashboard;
-Definitions robot;
+
     PolePipeline detector;
     PipelineNew detector2;
+
 
 
     enum autoStage {
@@ -29,22 +36,25 @@ Definitions robot;
         two
     }
 
+    double d_left, d_right, d_front;
+    Definitions robot;
+
     public double speedmulti = (double) 0.3;
     @Override
     public void runOpMode() throws InterruptedException {
-        Definitions robot = new Definitions();
+        robot = new Definitions();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
         OpenCvCamera webcam;
         autoStage stage = autoStage.one;
-        //double[] poseValues = calculateRobotPose(d_left, d_front, d_right);
-        //double x = poseValues[0];
-        //double y = poseValues[1];
-       // double heading = poseValues[2];
+        double[] poseValues = calculateRobotPose(d_left, d_front, d_right);
+        double x = poseValues[0];
+        double y = poseValues[1];
+        double heading = poseValues[2];
 
 // Create a new Pose2d object with the calculated pose
-//Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
+Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
         //set to starting positon and angle.toCaps()
 
         /*
@@ -77,55 +87,47 @@ Definitions robot;
                  */
             }
         });
-        TrajectorySequence Auto = drive.trajectorySequenceBuilder(startingPose)
-        .lineTo(new Vector2d(33.15, -8.74), Math.toRadians(-45));
-        TrajectorySequence Auto6 = drive.trajectorySequenceBuilder(new Pose2d(35.03, -62.03, Math.toRadians(90.00)))
-        .lineTo(new Vector2d(33.15, -8.74))
-        .splineTo(new Vector2d(47.74, -12.64), Math.toRadians(-11.11))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        //fetch new cone
-        //dunk new cone
-        
-        //fetch new cone
-        
-        //dunk new cone
-        
-        .build();
-        
-        TrajectorySequence Auto2 = drive.trajectorySequenceBuilder(auto.end())
-        
-        //fetch new cone
-        .splineTo(new Vector2d(48.17, -12.64), Math.toRadians(0))
-        //dunk new cone
-        
-        .build();
-        TrajectorySequence Auto3 = drive.trajectorySequenceBuilder(auto2.end())
-        .splineTo(new Vector2d(33.44, -8.74), Math.toRadians(-45.00))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .splineTo(new Vector2d(47.45, -13.36), Math.toRadians(-11.11))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .build();
-        TrajectorySequence Auto4 = drive.trajectorySequenceBuilder(Auto3.end())
-        .splineTo(new Vector2d(47.30, -13.07), Math.toRadians(0))
-        .build();
-        TrajectorySequence Auto5 = drive.trajectorySequenceBuilder(Auto4.end())
-        .splineTo(new Vector2d(32.71, -8.59), Math.toRadians(-45.00))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .build();
+
+
+
+
+        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-36.79, -65.00, Math.toRadians(270.00)))
+                .lineToLinearHeading(new Pose2d(-36.56, -21.99, Math.toRadians(270.00)))
+                .lineTo(new Vector2d(-25.38, -21.25))
+                .build();
+        drive.setPoseEstimate(untitled0.start());
         waitForStart();
-
-        drive.followTrajectorySequence(auto);
-        //dsagyhsjan
-        drive.followTrajectorySequence(Auto2);
-        //sadhuijqewnads
-        drive.followTrajectorySequence(Auto3);
-        //asdfghjkuytresd
-        drive.followTrajectorySequence(Auto4);
+        robot.claw.setPower(1);
+        sleep(1000);
+        robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-
-
-
+        robot.lSlide1.setTargetPosition(800);
+        robot.lSlide2.setTargetPosition(800);
+        robot.v4bar1.setTargetPosition(1200);
+        robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide1.setPower(-1);
+        robot.lSlide2.setPower(-1);
+        robot.v4bar1.setPower(1);
+        drive.followTrajectorySequence(untitled0);
+        sleep(250);
+        robot.lSlide1.setPower(0);
+        robot.lSlide2.setPower(0);
+        robot.v4bar1.setPower(0);
+        robot.lSlide1.setTargetPosition(0);
+        robot.lSlide2.setTargetPosition(0);
+        robot.v4bar1.setTargetPosition(0);
+        robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lSlide1.setPower(0.5);
+        robot.lSlide2.setPower(0.5);
+        robot.v4bar1.setPower(1);
+        sleep(10000);
         dashboard = FtcDashboard.getInstance();
        /* horizpole:
         while (true){
@@ -172,10 +174,12 @@ Definitions robot;
 
 
         }
-       /* public static double[] calculateRobotPose(double d_left, double d_front, double d_right) {
+        public double[] calculateRobotPose(double d_left, double d_front, double d_right) {
             double x, y, theta;
+
+            theta = robot.imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
             // Calculate x
-           // x = (60 - 8) - d_front * Math.sin(theta);
+            x = (60 - 8) - d_front * Math.sin(theta);
         
             // Calculate y
             y = (60 - 8) - d_left + d_right;
@@ -189,7 +193,6 @@ Definitions robot;
             // Return x, y, and theta as an array
             return new double[] { x, y, theta };
         }
-        */
         public void barMoveToEncoderPosition(double power, int targetEncoderPos) {
             // Reset the robot.lSlide1 encoder count to zero
             robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
