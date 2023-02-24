@@ -75,27 +75,48 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
                  */
             }
         });
-        TrajectorySequence Auto = drive.trajectorySequenceBuilder(new Pose2d(35.03, -62.03, Math.toRadians(90.00)))
+        TrajectorySequence Auto = drive.trajectorySequenceBuilder(startingPose)
         .lineTo(new Vector2d(33.15, -8.74), Math.toRadians(-45))
         .splineTo(new Vector2d(47.74, -12.64), Math.toRadians(-11.11))
         .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
         //fetch new cone
+        //dunk new cone
+        
+        //fetch new cone
+        
+        //dunk new cone
+        
+        .build();
+        
+        TrajectorySequence Auto2 = drive.trajectorySequenceBuilder(auto.end())
+        
+        //fetch new cone
         .splineTo(new Vector2d(48.17, -12.64), Math.toRadians(0))
         //dunk new cone
+        
+        .build();
+        TrajectorySequence Auto3 = drive.trajectorySequenceBuilder(auto2.end())
         .splineTo(new Vector2d(33.44, -8.74), Math.toRadians(-45.00))
         .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
         .splineTo(new Vector2d(47.45, -13.36), Math.toRadians(-11.11))
         .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        //fetch new cone
+        .build();
+        TrajectorySequence Auto4 = drive.trajectorySequenceBuilder(Auto3.end())
         .splineTo(new Vector2d(47.30, -13.07), Math.toRadians(0))
-        //dunk new cone
+        .build();
+        TrajectorySequence Auto5 = drive.trajectorySequenceBuilder(Auto4.end())
         .splineTo(new Vector2d(32.71, -8.59), Math.toRadians(-45.00))
         .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
         .build();
         waitForStart();
 
         drive.followTrajectorySequence(auto);
-
+        //dsagyhsjan
+        drive.followTrajectorySequence(Auto2);
+        //sadhuijqewnads
+        drive.followTrajectorySequence(Auto3);
+        //asdfghjkuytresd
+        drive.followTrajectorySequence(Auto4);
 
 
 
@@ -147,7 +168,6 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
         }
         public static double[] calculateRobotPose(double d_left, double d_front, double d_right) {
             double x, y, theta;
-        
             // Calculate x
             x = (60 - 8) - d_front * Math.sin(theta);
         
