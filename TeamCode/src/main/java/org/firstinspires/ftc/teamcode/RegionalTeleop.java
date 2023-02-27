@@ -107,7 +107,7 @@ public class RegionalTeleop extends LinearOpMode {
                currentServoState = servoState.none;
                servoAuto = false;
             }
-
+/*
             colorSensorCurrent = robot.colorsensor.alpha() <= 1;
 
             if (servoAuto) {
@@ -118,6 +118,7 @@ public class RegionalTeleop extends LinearOpMode {
                     currentServoState = servoState.closed;
                 }
             }
+            */
 
             //4 bar and slides control
                 /*
@@ -136,19 +137,19 @@ public class RegionalTeleop extends LinearOpMode {
             //just p no i or d. (i got i gpu on streets last night btw)
 
             if (gamepad2.dpad_left){
-                targetSlide = 0;
-                targetV4b = -500;
-                fbConst = 0;
+                robot.lSlide1.setTargetPosition(0);
+                robot.lSlide2.setTargetPosition(0);
+                robot.v4bar1.setTargetPosition(1200);
             }
             if (gamepad2.dpad_up){
-                robot.lSlide1.setTargetPosition(800);
-                robot.lSlide2.setTargetPosition(800);
+                robot.lSlide1.setTargetPosition(1200);
+                robot.lSlide2.setTargetPosition(1200);
                 robot.v4bar1.setTargetPosition(1200);
             }
             if (gamepad2.dpad_right){
-                targetSlide = 800;
-                targetV4b = -1250;
-                fbConst = 0;
+                robot.lSlide1.setTargetPosition(400);
+                robot.lSlide2.setTargetPosition(400);
+                robot.v4bar1.setTargetPosition(1200);
             }
             if (gamepad2.dpad_down) {
 
@@ -185,11 +186,7 @@ public class RegionalTeleop extends LinearOpMode {
                 robot.lSlide1.setPower(0);
             }
 
-                robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti + fbConst);
-            robot.lSlide1.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
-            robot.lSlide2.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
+
 
             //Servo Controller
             switch (currentServoState) {
@@ -219,7 +216,12 @@ public class RegionalTeleop extends LinearOpMode {
             }
 
             robot.claw.setPower(servoPower);
-
+            robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lSlide1.setPower(1);
+            robot.lSlide2.setPower(1);
+            robot.v4bar1.setPower(0.6);
 
                 telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
                 telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
