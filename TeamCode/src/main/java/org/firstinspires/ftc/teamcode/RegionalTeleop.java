@@ -142,8 +142,8 @@ public class RegionalTeleop extends LinearOpMode {
                 robot.v4bar1.setTargetPosition(1200);
             }
             if (gamepad2.dpad_up){
-                robot.lSlide1.setTargetPosition(1200);
-                robot.lSlide2.setTargetPosition(1200);
+                robot.lSlide1.setTargetPosition(1400);
+                robot.lSlide2.setTargetPosition(1400);
                 robot.v4bar1.setTargetPosition(1200);
             }
             if (gamepad2.dpad_right){
