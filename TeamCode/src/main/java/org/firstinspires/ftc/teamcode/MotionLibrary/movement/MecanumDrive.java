@@ -74,6 +74,8 @@ abstract class MecanumDrive {
 
         //IMU init
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+
+        PID.setConstantsMove(1,1,1);
     }
 
     /**
@@ -396,10 +398,10 @@ abstract class MecanumDrive {
      */
     public void lineTo(Vector2D target) {
         NanoClock Time = new NanoClock();
-        Vector2D error = new Vector2D();
+        Vector2D error = new Vector2D(1);
         PID pidX = new PID(PID.Type.move);
         PID pidY = new PID(PID.Type.move);
-        while (error.X != 0 & error.Y != 0) {
+        while (error.X != 0 && error.Y != 0) {
             trackPosition();
             error = Vector2D.sub( Pose2D.Vector2d(currentPosition), target);
             pidX.pid(error.X);

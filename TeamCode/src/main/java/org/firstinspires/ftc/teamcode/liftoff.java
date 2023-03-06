@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.external.samples;
-
+package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 @TeleOp(name = "liftoff ai")
 public class liftoff extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "sdcard/FIRST/tflitemodels/RunwayV1.tflite";
+    private static final String TFOD_MODEL_ASSET = "src/main/assets/Runwayv1.tflite";
 
     private static final String[] LABELS = {
             "red cone",

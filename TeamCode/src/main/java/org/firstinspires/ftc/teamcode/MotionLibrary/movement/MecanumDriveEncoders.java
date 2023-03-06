@@ -14,7 +14,9 @@ public class MecanumDriveEncoders extends MecanumDrive {
     private Encoder leftFrontEncoder, rightFrontEncoder, leftRearEncoder, rightRearEncoder;
 
     public double startingAngle;
-    public double encoderTicsPerInch = (1 / 520) / 3 * PI;
+    public double encoderTicsPerRev = 537.7;
+    public double inchesPerRev = PI * 3.7;
+    public double encoderTicsPerInch = encoderTicsPerRev * inchesPerRev;
 
 
 

@@ -4,22 +4,52 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Definitions;
+import org.firstinspires.ftc.teamcode.MotionLibrary.util.PID;
 
 @TeleOp(name="FieldCentricTeleop")
 public class RegionalTeleop extends LinearOpMode {
     Definitions robot;
+    //Slide Controls
+    double targetSlide;
+    double targetV4b;
+    double fbConst;
+    double v4bAdd;
+    double v4bAddMulti = 0.1;
+    double lSlideConst = 0;
+    double lslidePower;
+    double v4bPower;
+    boolean lSlideMoving = false;
+    boolean v4bMoving = false;
+    boolean gamepad2LeftLast = true;
+    boolean gamepad2UpLast = true;
+    boolean gamepad2RightLast = true;
+    boolean gamepad2DownLast = true;
+    final double v4bTicsToDegrees = 1425.1 * 1.3 / 360;
+    double v4bAngle;
+    PID v4bPID;
+    PID lSLidesPID;
+
+
+
     @Override
-
-
     public void runOpMode() throws InterruptedException {
+
         // Declare our motors
         // Make sure your ID's match your configuration
         Definitions robot = new Definitions();
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
 
+        //PID stuffs
+
+        PID.setConstantsSlides(-0.001, 0.0000, 0.0000);
+        PID.setConstantsArm(0.0007,0.0000001,0.00001);
+
+        v4bPID = new PID(PID.Type.arm);
+        lSLidesPID = new PID(PID.Type.slides);
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
 
@@ -43,11 +73,7 @@ public class RegionalTeleop extends LinearOpMode {
         boolean colorSensorCurrent = false;
         double colorSensorCooldown = 0;
 
-        //Slide Controls
-        double targetSlide;
-        double targetV4b;
-        double fbConst;
-        double targetV4bdegree = 0;
+
 
         fbConst = 0;
         targetSlide = 0;
@@ -55,16 +81,18 @@ public class RegionalTeleop extends LinearOpMode {
         robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lSlide1.setTargetPosition(0);
-        robot.lSlide2.setTargetPosition(0);
-        robot.v4bar1.setTargetPosition(0);
+        robot.lSlide1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.v4bar1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
-        float speedMultiplier = 1-gamepad1.right_trigger;
+        float speedMultiplier = 1;
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
 
             //Movement
+            speedMultiplier = 1-gamepad1.right_trigger;
+
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
             double x = gamepad1.left_stick_x;//\ * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
@@ -107,8 +135,8 @@ public class RegionalTeleop extends LinearOpMode {
                currentServoState = servoState.none;
                servoAuto = false;
             }
-/*
-            colorSensorCurrent = robot.colorsensor.alpha() <= 1;
+
+            colorSensorCurrent = robot.colorsensor.alpha() <= 2;
 
             if (servoAuto) {
                 if (colorSensorCurrent && colorSensorLast) {
@@ -117,8 +145,14 @@ public class RegionalTeleop extends LinearOpMode {
                 if (colorSensorCurrent && System.currentTimeMillis() - colorSensorCooldown >= 250) {
                     currentServoState = servoState.closed;
                 }
+                if (colorSensorCurrent && !colorSensorLast) {
+                    robot.lSlide1.setTargetPosition(150);
+                    robot.lSlide2.setTargetPosition(150);
+                    targetSlide = 150;
+                    lSLidesPID.reset();
+                }
             }
-            */
+
 
             //4 bar and slides control
                 /*
@@ -139,24 +173,49 @@ public class RegionalTeleop extends LinearOpMode {
             if (gamepad2.dpad_left){
                 robot.lSlide1.setTargetPosition(0);
                 robot.lSlide2.setTargetPosition(0);
-                robot.v4bar1.setTargetPosition(1200);
-            }
+                robot.v4bar1.setTargetPosition(1150);
+                targetSlide = 0;
+                targetV4b = 1150;
+                if (!gamepad2LeftLast) {
+                    newHeightStuffs();
+                }
+                gamepad2LeftLast = true;
+            } else gamepad2LeftLast = false;
             if (gamepad2.dpad_up){
                 robot.lSlide1.setTargetPosition(1400);
                 robot.lSlide2.setTargetPosition(1400);
-                robot.v4bar1.setTargetPosition(1200);
-            }
+                robot.v4bar1.setTargetPosition(1150);
+                targetSlide = -1350;
+                targetV4b = 1150;
+                if (!gamepad2UpLast) {
+                    newHeightStuffs();
+                }
+                gamepad2UpLast = true;
+            } else gamepad2UpLast = false;
             if (gamepad2.dpad_right){
                 robot.lSlide1.setTargetPosition(400);
                 robot.lSlide2.setTargetPosition(400);
-                robot.v4bar1.setTargetPosition(1200);
-            }
+                robot.v4bar1.setTargetPosition(1150);
+                targetSlide = 400;
+                targetV4b = 1150;
+                if (!gamepad2RightLast) {
+                    newHeightStuffs();
+                }
+                gamepad2RightLast = true;
+            } else gamepad2RightLast = false;
             if (gamepad2.dpad_down) {
 
                 robot.lSlide1.setTargetPosition(0);
                 robot.lSlide2.setTargetPosition(0);
                 robot.v4bar1.setTargetPosition(0);
-            }
+                targetSlide = 0;
+                targetV4b = 0;
+                if (!gamepad2DownLast) {
+                    newHeightStuffs();
+                }
+                gamepad2DownLast = true;
+            } else gamepad2DownLast = false;
+
             targetSlide += gamepad2.left_stick_y;
             targetV4b += gamepad2.right_stick_y * -8;
 
@@ -165,26 +224,6 @@ public class RegionalTeleop extends LinearOpMode {
             final double KV4bMulti;
             KslideMulti = -0.025;
             KV4bMulti = -0.001;
-
-         /*
-            if (targetSlide <= 0) {
-                targetSlide = 0;
-            }
-
-          */
-            /*
-            if (targetV4b >= 0) {
-                targetV4b = 0;
-            }
-             */
-
-            if (gamepad2.a) {
-                robot.lSlide1.setPower(1);
-            } else if (gamepad2.b) {
-                robot.lSlide1.setPower(-1);
-            } else {
-                robot.lSlide1.setPower(0);
-            }
 
 
 
@@ -206,9 +245,9 @@ public class RegionalTeleop extends LinearOpMode {
                     break;
                 case none:
                     if (gamepad2.right_bumper) {
-                        servoPower = 0.5;
+                        servoPower = 1;
                     } else if (gamepad2.left_bumper) {
-                        servoPower = -0.5;
+                        servoPower = -1;
                     } else {
                         servoPower = 0;
                     }
@@ -216,29 +255,67 @@ public class RegionalTeleop extends LinearOpMode {
             }
 
             robot.claw.setPower(servoPower);
+
+            /*
             robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide1.setPower(1);
             robot.lSlide2.setPower(1);
             robot.v4bar1.setPower(0.6);
+             */
 
-                telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
-                telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
-                telemetry.addData("linear slide encoder target", targetSlide);
-                telemetry.addData("V4Bar encoder target", targetV4b);
+            //slide and v4bControls
+            double lslidesError = targetSlide-(robot.lSlide1.getCurrentPosition() + robot.lSlide2.getCurrentPosition())/2;
+
+            lSLidesPID.pid(lslidesError);
+            lslidePower = lSLidesPID.pidout + lSlideConst;
+
+            robot.lSlide1.setPower(Range.clip(lslidePower, -1, 1));
+            robot.lSlide2.setPower(Range.clip(lslidePower, -1, 1));
+
+            double v4bError = targetV4b-robot.v4bar1.getCurrentPosition();
+
+            v4bAngle = robot.v4bar1.getCurrentPosition()/v4bTicsToDegrees + 12; //The 12 is the starting angle of the 4bar (It is a little bit forward)
+            v4bAdd = Math.sin(Math.toRadians(v4bAngle)) * v4bAddMulti;
+            v4bPID.pid(v4bError);
+            v4bPower = v4bPID.pidout + v4bAdd;
+
+            robot.v4bar1.setPower(Range.clip(v4bPower, -1, 1));
+
+            //telemetry thingies
+            telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
+            telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
+            telemetry.addData("linear slide encoder target", targetSlide);
+            telemetry.addData("V4Bar encoder target", targetV4b);
+                /*
                 telemetry.addData("Dpad up", gamepad2.dpad_up);
                 telemetry.addData("Dpad right", gamepad2.dpad_right);
                 telemetry.addData("Dpad left", gamepad2.dpad_left);
                 telemetry.addData("Dpad down", gamepad2.dpad_down);
-                telemetry.addData("Color Sensor alpha", robot.colorsensor.alpha());
-                telemetry.addData("Servo State", currentServoState);
-                telemetry.update();
+                 */
+            telemetry.addData("Color Sensor alpha", robot.colorsensor.alpha());
+            telemetry.addData("Servo State", currentServoState);
+            telemetry.addData("v4bar Power", v4bPower);
+            telemetry.addData("v4bar Angle", v4bAngle);
+            telemetry.addData("v4bar PID out", v4bPID.pidout);
+            telemetry.addData("arm p", v4bPID.p);
+            telemetry.addData("arm i", v4bPID.i);
+            telemetry.addData("arm d", v4bPID.d);
+            telemetry.addData("armKP", PID.KPArm);
+            telemetry.addData("v4b error", v4bError);
+            telemetry.addData("Slides Power", lslidePower);
+            telemetry.addData("slides p", lSLidesPID.p);
+            telemetry.addData("slides i", lSLidesPID.i);
+            telemetry.addData("slides d", lSLidesPID.d);
+            telemetry.addData("slides error", lslidesError);
+            telemetry.update();
 
                 //used for servo control
             lastServoState = currentServoState;
             colorSensorLast = colorSensorCurrent;
         }
+
 
 
     }
@@ -248,5 +325,12 @@ public class RegionalTeleop extends LinearOpMode {
         opening,
         closed,
         none;
+    }
+
+    public void newHeightStuffs() {
+        v4bMoving = true;
+        lSlideMoving = true;
+        lSLidesPID.reset();
+        v4bPID.reset();
     }
 }

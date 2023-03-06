@@ -55,7 +55,7 @@ public class MecanumTeleOp3 extends LinearOpMode {
             double rx = -gamepad1.right_stick_x;
 
             // Read inverse IMU heading, as the IMU heading is CW positive
-            double botHeading = 0; //-imu.getAngularOrientation().firstAngle;
+            double botHeading = -imu.getAngularOrientation().firstAngle;
 
             double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
             double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);

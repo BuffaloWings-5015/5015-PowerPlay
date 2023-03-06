@@ -16,6 +16,9 @@ public class PID {
     public static double KPArm;
     public static double KIArm;
     public static double KDArm;
+    public static double KPSlides;
+    public static double KISlides;
+    public static double KDSlides;
 
     public double KP;
     public double KI;
@@ -47,14 +50,22 @@ public class PID {
             KP = KPMove;
             KI = KIMove;
             KD = KDMove;
+            break;
             case turn:
             KP = KPTurn;
             KI = KITurn;
             KD = KDTurn;
+            break;
             case arm:
             KP = KPArm;
             KI = KIArm;
             KD = KDArm;
+            break;
+            case slides:
+            KP = KPSlides;
+            KI = KISlides;
+            KD = KDSlides;
+            break;
         }
     }
 
@@ -95,6 +106,18 @@ public class PID {
     }
 
     /**
+     * Sets the static constants that can be used for controlling the speed compared to distance
+     * @param kp proportional multiplier constant
+     * @param ki integral multiplier constant
+     * @param kd derivative multiplier constant
+     */
+    public static void setConstantsSlides(double kp, double ki, double kd) {
+        KPSlides = kp;
+        KISlides = ki;
+        KDSlides = kd;
+    }
+
+    /**
      * Method for inputting
      * @param error
      */
@@ -128,6 +151,7 @@ public class PID {
     public enum Type {
         move,
         turn,
-        arm
+        arm,
+        slides
     }
 }

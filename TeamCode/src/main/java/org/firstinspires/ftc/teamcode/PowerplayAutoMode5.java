@@ -2,26 +2,30 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.MotionLibrary.movement.MecanumDriveEncoders;
+import org.firstinspires.ftc.teamcode.MotionLibrary.util.Vector2D;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="Test Center 😂😂😂😂😂")
-public class PowerplayAutoMode3 extends LinearOpMode {
+@Autonomous(name="Test Center 3 😂😂😂😂😂")
+public class PowerplayAutoMode5 extends LinearOpMode {
 
     String silly = "";
     FtcDashboard dashboard;
-Definitions robot;
+
     PolePipeline detector;
     PipelineNew detector2;
+
 
 
     enum autoStage {
@@ -29,22 +33,31 @@ Definitions robot;
         two
     }
 
+    double d_left, d_right, d_front;
+    Definitions robot;
+    MecanumDriveEncoders motion;
+
     public double speedmulti = (double) 0.3;
     @Override
     public void runOpMode() throws InterruptedException {
-        Definitions robot = new Definitions();
+
+        telemetry.addData("Status:", "runOpmode");
+        telemetry.update();
+
+        robot = new Definitions();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.robotHardwareMapInit(hardwareMap);
+        motion = new MecanumDriveEncoders(this, 0);
         robot.driveInit();
         OpenCvCamera webcam;
         autoStage stage = autoStage.one;
-        //double[] poseValues = calculateRobotPose(d_left, d_front, d_right);
-        //double x = poseValues[0];
-        //double y = poseValues[1];
-       // double heading = poseValues[2];
+        double[] poseValues = calculateRobotPose(d_left, d_front, d_right);
+        double x = poseValues[0];
+        double y = poseValues[1];
+        double heading = poseValues[2];
 
 // Create a new Pose2d object with the calculated pose
-//Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
+Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
         //set to starting positon and angle.toCaps()
 
         /*
@@ -53,13 +66,14 @@ Definitions robot;
         */
 
 
+        telemetry.addData("Status:", "cameraStuffs");
         int cameraMonitorViewId = hardwareMap.appContext
                 .getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        PolePipeline detector = new PolePipeline(telemetry);
-        webcam.setPipeline(detector);
+        //PolePipeline detector = new PolePipeline(telemetry);
+        //webcam.setPipeline(detector);
 
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        /*webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
 
         {
             @Override
@@ -75,54 +89,21 @@ Definitions robot;
                 /*
                  * This will be called if the camera could not be opened
                  */
-            }
+          /*  }
         });
-        TrajectorySequence Auto = drive.trajectorySequenceBuilder(startingPose)
-        .lineTo(new Vector2d(33.15, -8.74), Math.toRadians(-45));
-        TrajectorySequence Auto6 = drive.trajectorySequenceBuilder(new Pose2d(35.03, -62.03, Math.toRadians(90.00)))
-        .lineTo(new Vector2d(33.15, -8.74))
-        .splineTo(new Vector2d(47.74, -12.64), Math.toRadians(-11.11))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        //fetch new cone
-        //dunk new cone
-        
-        //fetch new cone
-        
-        //dunk new cone
-        
-        .build();
-        
-        TrajectorySequence Auto2 = drive.trajectorySequenceBuilder(auto.end())
-        
-        //fetch new cone
-        .splineTo(new Vector2d(48.17, -12.64), Math.toRadians(0))
-        //dunk new cone
-        
-        .build();
-        TrajectorySequence Auto3 = drive.trajectorySequenceBuilder(auto2.end())
-        .splineTo(new Vector2d(33.44, -8.74), Math.toRadians(-45.00))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .splineTo(new Vector2d(47.45, -13.36), Math.toRadians(-11.11))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .build();
-        TrajectorySequence Auto4 = drive.trajectorySequenceBuilder(Auto3.end())
-        .splineTo(new Vector2d(47.30, -13.07), Math.toRadians(0))
-        .build();
-        TrajectorySequence Auto5 = drive.trajectorySequenceBuilder(Auto4.end())
-        .splineTo(new Vector2d(32.71, -8.59), Math.toRadians(-45.00))
-        .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
-        .build();
+*/
+
+
+        telemetry.addData("Status:", "trajectory Stuff");
+        telemetry.update();
+
+        telemetry.addData("Status :", "waiting for start");
         waitForStart();
 
-        drive.followTrajectorySequence(auto);
-        //dsagyhsjan
-        drive.followTrajectorySequence(Auto2);
-        //sadhuijqewnads
-        drive.followTrajectorySequence(Auto3);
-        //asdfghjkuytresd
-        drive.followTrajectorySequence(Auto4);
+        telemetry.addData("Status:", "following stuff");
+        telemetry.update();
 
-
+        motion.lineTo(new Vector2D(0, 60));
 
 
 
@@ -168,14 +149,18 @@ Definitions robot;
 */
 
 
-        webcam.stopStreaming();telemetry.addData("PolePOS", silly);telemetry.update();
+//        webcam.stopStreaming();
+        telemetry.addData("PolePOS", silly);
+        telemetry.update();
 
 
         }
-       /* public static double[] calculateRobotPose(double d_left, double d_front, double d_right) {
+        public double[] calculateRobotPose(double d_left, double d_front, double d_right) {
             double x, y, theta;
+
+            theta = robot.imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
             // Calculate x
-           // x = (60 - 8) - d_front * Math.sin(theta);
+            x = (60 - 8) - d_front * Math.sin(theta);
         
             // Calculate y
             y = (60 - 8) - d_left + d_right;
@@ -189,7 +174,6 @@ Definitions robot;
             // Return x, y, and theta as an array
             return new double[] { x, y, theta };
         }
-        */
         public void barMoveToEncoderPosition(double power, int targetEncoderPos) {
             // Reset the robot.lSlide1 encoder count to zero
             robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
