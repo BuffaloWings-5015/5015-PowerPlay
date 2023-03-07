@@ -143,7 +143,7 @@ public class RegionalTeleop2 extends LinearOpMode {
                 v4barburger = 1200;
             }
             if (gamepad2.dpad_up){
-                burger = 1200;
+                burger = 1400;
                 v4barburger = 1200;
             }
             if (gamepad2.dpad_right){
@@ -183,7 +183,7 @@ public class RegionalTeleop2 extends LinearOpMode {
             }
 
             //v4barburger 👀👀👀
-                v4barburger += 100 * gamepad2.left_stick_y;
+                v4barburger += 100 * -gamepad2.left_stick_y;
 
 
 

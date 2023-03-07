@@ -310,7 +310,7 @@ public class RegionalTeleop extends LinearOpMode {
             telemetry.addData("armKP", PID.KPArm);
             telemetry.addData("v4b error", v4bError);
             telemetry.addData("Slides Power", lslidePower);
-            telemetry.addData("slides p", lSLidesPID.p);
+            //telemetry.addData("slides p", lSLidesPID.p);
             telemetry.addData("slides i", lSLidesPID.i);
             telemetry.addData("slides d", lSLidesPID.d);
            // telemetry.addData("slides error", lslidesError);
