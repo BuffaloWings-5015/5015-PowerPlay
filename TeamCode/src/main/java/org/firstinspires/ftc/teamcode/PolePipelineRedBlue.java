@@ -1,14 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PolePipeline extends OpenCvPipeline {
+public class PolePipelineRedBlue extends OpenCvPipeline {
     /*
     YELLOW  = Parking Left
     CYAN    = Parking Middle
@@ -30,7 +37,7 @@ public class PolePipeline extends OpenCvPipeline {
         CLOSE,
     }
     public PolePosition polePositoin = PolePosition.CENTER ;
-    public PoleWidth widthofpole =PoleWidth.CENTER;
+    public PoleWidth widthofpole = PoleWidth.CENTER;
     // TOPLEFT anchor point for the bounding box
     private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(445, 78);
 
@@ -75,7 +82,7 @@ public class PolePipeline extends OpenCvPipeline {
 
     // Running variable storing the parking position
 
-    public PolePipeline(Telemetry telemetry) {
+    public PolePipelineRedBlue(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
     @Override

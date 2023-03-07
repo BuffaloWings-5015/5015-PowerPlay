@@ -49,7 +49,7 @@ public class Definitions {
     public DcMotor lSlide2 = null;
     public CRServo claw = null;
     public final double ticks_in_degree = 1421.1 / 360.0 * 1.3;
-
+    //port 2 on the thing (ic2)
     public ColorSensor colorsensor = null;
 
 

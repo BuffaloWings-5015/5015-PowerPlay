@@ -49,7 +49,7 @@ public class RegionalTeleop extends LinearOpMode {
         PID.setConstantsArm(0.0007,0.0000001,0.00001);
 
         v4bPID = new PID(PID.Type.arm);
-        lSLidesPID = new PID(PID.Type.slides);
+       // lSLidesPID = new PID(PID.Type.slides);
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
 
@@ -81,8 +81,8 @@ public class RegionalTeleop extends LinearOpMode {
         robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lSlide1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //robot.lSlide1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //robot.lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.v4bar1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
         float speedMultiplier = 1;
@@ -149,7 +149,7 @@ public class RegionalTeleop extends LinearOpMode {
                     robot.lSlide1.setTargetPosition(150);
                     robot.lSlide2.setTargetPosition(150);
                     targetSlide = 150;
-                    lSLidesPID.reset();
+                   // lSLidesPID.reset();
                 }
             }
 
@@ -266,6 +266,7 @@ public class RegionalTeleop extends LinearOpMode {
              */
 
             //slide and v4bControls
+            /*
             double lslidesError = targetSlide-(robot.lSlide1.getCurrentPosition() + robot.lSlide2.getCurrentPosition())/2;
 
             lSLidesPID.pid(lslidesError);
@@ -273,7 +274,7 @@ public class RegionalTeleop extends LinearOpMode {
 
             robot.lSlide1.setPower(Range.clip(lslidePower, -1, 1));
             robot.lSlide2.setPower(Range.clip(lslidePower, -1, 1));
-
+*/
             double v4bError = targetV4b-robot.v4bar1.getCurrentPosition();
 
             v4bAngle = robot.v4bar1.getCurrentPosition()/v4bTicsToDegrees + 12; //The 12 is the starting angle of the 4bar (It is a little bit forward)
@@ -282,6 +283,10 @@ public class RegionalTeleop extends LinearOpMode {
             v4bPower = v4bPID.pidout + v4bAdd;
 
             robot.v4bar1.setPower(Range.clip(v4bPower, -1, 1));
+            robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lSlide1.setPower(1);
+            robot.lSlide2.setPower(1);
 
             //telemetry thingies
             telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
@@ -308,7 +313,7 @@ public class RegionalTeleop extends LinearOpMode {
             telemetry.addData("slides p", lSLidesPID.p);
             telemetry.addData("slides i", lSLidesPID.i);
             telemetry.addData("slides d", lSLidesPID.d);
-            telemetry.addData("slides error", lslidesError);
+           // telemetry.addData("slides error", lslidesError);
             telemetry.update();
 
                 //used for servo control
@@ -329,8 +334,8 @@ public class RegionalTeleop extends LinearOpMode {
 
     public void newHeightStuffs() {
         v4bMoving = true;
-        lSlideMoving = true;
-        lSLidesPID.reset();
+       // lSlideMoving = true;
+       // lSLidesPID.reset();
         v4bPID.reset();
     }
 }
