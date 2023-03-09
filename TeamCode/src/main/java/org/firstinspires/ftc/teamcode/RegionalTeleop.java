@@ -42,10 +42,13 @@ public class RegionalTeleop extends LinearOpMode {
         Definitions robot = new Definitions();
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
-
+        robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lSlide1.setTargetPosition(0);
+        robot.lSlide2.setTargetPosition(0);
         //PID stuffs
 
-        PID.setConstantsSlides(-0.001, 0.0000, 0.0000);
+       // PID.setConstantsSlides(-0.001, 0.0000, 0.0000);
         PID.setConstantsArm(0.0007,0.0000001,0.00001);
 
         v4bPID = new PID(PID.Type.arm);
@@ -78,8 +81,7 @@ public class RegionalTeleop extends LinearOpMode {
         fbConst = 0;
         targetSlide = 0;
         targetV4b = 0;
-        robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         robot.v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //robot.lSlide1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //robot.lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -146,8 +148,6 @@ public class RegionalTeleop extends LinearOpMode {
                     currentServoState = servoState.closed;
                 }
                 if (colorSensorCurrent && !colorSensorLast) {
-                    robot.lSlide1.setTargetPosition(150);
-                    robot.lSlide2.setTargetPosition(150);
                     targetSlide = 150;
                    // lSLidesPID.reset();
                 }
@@ -171,8 +171,6 @@ public class RegionalTeleop extends LinearOpMode {
             //just p no i or d. (i got i gpu on streets last night btw)
 
             if (gamepad2.dpad_left){
-                robot.lSlide1.setTargetPosition(0);
-                robot.lSlide2.setTargetPosition(0);
                 robot.v4bar1.setTargetPosition(1150);
                 targetSlide = 0;
                 targetV4b = 1150;
@@ -182,10 +180,8 @@ public class RegionalTeleop extends LinearOpMode {
                 gamepad2LeftLast = true;
             } else gamepad2LeftLast = false;
             if (gamepad2.dpad_up){
-                robot.lSlide1.setTargetPosition(1400);
-                robot.lSlide2.setTargetPosition(1400);
                 robot.v4bar1.setTargetPosition(1150);
-                targetSlide = -1350;
+                targetSlide = 1350;
                 targetV4b = 1150;
                 if (!gamepad2UpLast) {
                     newHeightStuffs();
@@ -193,8 +189,6 @@ public class RegionalTeleop extends LinearOpMode {
                 gamepad2UpLast = true;
             } else gamepad2UpLast = false;
             if (gamepad2.dpad_right){
-                robot.lSlide1.setTargetPosition(400);
-                robot.lSlide2.setTargetPosition(400);
                 robot.v4bar1.setTargetPosition(1150);
                 targetSlide = 400;
                 targetV4b = 1150;
@@ -204,9 +198,6 @@ public class RegionalTeleop extends LinearOpMode {
                 gamepad2RightLast = true;
             } else gamepad2RightLast = false;
             if (gamepad2.dpad_down) {
-
-                robot.lSlide1.setTargetPosition(0);
-                robot.lSlide2.setTargetPosition(0);
                 robot.v4bar1.setTargetPosition(0);
                 targetSlide = 0;
                 targetV4b = 0;
@@ -283,6 +274,8 @@ public class RegionalTeleop extends LinearOpMode {
             v4bPower = v4bPID.pidout + v4bAdd;
 
             robot.v4bar1.setPower(Range.clip(v4bPower, -1, 1));
+            robot.lSlide1.setTargetPosition((int) targetSlide);
+            robot.lSlide2.setTargetPosition((int) targetSlide);
             robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide1.setPower(1);
@@ -311,8 +304,8 @@ public class RegionalTeleop extends LinearOpMode {
             telemetry.addData("v4b error", v4bError);
             telemetry.addData("Slides Power", lslidePower);
             //telemetry.addData("slides p", lSLidesPID.p);
-            telemetry.addData("slides i", lSLidesPID.i);
-            telemetry.addData("slides d", lSLidesPID.d);
+          //  telemetry.addData("slides i", lSLidesPID.i);
+            //telemetry.addData("slides d", lSLidesPID.d);
            // telemetry.addData("slides error", lslidesError);
             telemetry.update();
 
