@@ -14,6 +14,7 @@ public class PolePipeline extends OpenCvPipeline {
     CYAN    = Parking Middle
     MAGENTA = Parking Right
      */
+    public double xCoordinate;
     Telemetry telemetry;
     public Point position;
     public Point redPosition;
@@ -222,6 +223,7 @@ public class PolePipeline extends OpenCvPipeline {
             telemetry.addData("the point", position.toString());
             telemetry.addData("thepoint's x", rect.x);
             telemetry.addData("thepoint's width", rect.width);
+            xCoordinate = rect.x;
             if (x <= 449) {
                 polePositoin = PolePosition.LEFT;
             } else if (x > 450 && x < 520) {
@@ -268,5 +270,8 @@ public class PolePipeline extends OpenCvPipeline {
     }
     // Returns an enum being the current position where the robot will park
 
+    public double returnX () {
+        return xCoordinate;
+    }
 
 }

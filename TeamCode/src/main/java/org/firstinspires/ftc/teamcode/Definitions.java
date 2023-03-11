@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,7 +9,13 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 
 /**
  * This is NOT an opmode.
@@ -51,6 +58,8 @@ public class Definitions {
     public final double ticks_in_degree = 1421.1 / 360.0 * 1.3;
     //port 2 on the thing (ic2)
     public ColorSensor colorsensor = null;
+    public OpenCvCamera webcam1, webcam2;
+    public DistanceSensor distanceSensor;
 
 
     double speedMultiplier = 1;
@@ -78,6 +87,7 @@ public class Definitions {
 
 
     public void robotHardwareMapInit(HardwareMap Map) {
+        //telemetry.addData("Status :", "hardware map");
         leftFront = Map.dcMotor.get("leftFront");
         rightFront = Map.dcMotor.get("rightFront");
         leftBack = Map.dcMotor.get("leftRear");
@@ -92,9 +102,19 @@ public class Definitions {
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
         colorsensor = Map.colorSensor.get("colorSensor");
+        distanceSensor = Map.get(DistanceSensor.class, "distanceSensor");
+
+
+        int cameraMonitorViewId = Map.appContext
+                .getResources().getIdentifier("cameraMonitorViewId", "id", Map.appContext.getPackageName());
+
+        webcam1 = OpenCvCameraFactory.getInstance().createWebcam(Map.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        //webcam2 = OpenCvCameraFactory.getInstance().createWebcam(Map.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
     }
 
     void driveInit() {
+
+        //telemetry.addData("Status :", "init");
         //Stop and reset motor encoders to ensure consistent values
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

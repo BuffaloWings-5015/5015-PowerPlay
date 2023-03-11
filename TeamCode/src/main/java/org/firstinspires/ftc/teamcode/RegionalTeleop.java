@@ -1,16 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.RegionalTeleop.PoleCenteringState.linear;
+import static org.firstinspires.ftc.teamcode.RegionalTeleop.PoleCenteringState.notMoving;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Definitions;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.MotionLibrary.movement.MecanumDriveEncoders;
 import org.firstinspires.ftc.teamcode.MotionLibrary.util.PID;
+import org.firstinspires.ftc.teamcode.MotionLibrary.util.Pose2D;
+import org.firstinspires.ftc.teamcode.MotionLibrary.util.Vector2D;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp(name="FieldCentricTeleop")
 public class RegionalTeleop extends LinearOpMode {
+
+
     Definitions robot;
     //Slide Controls
     double targetSlide;
@@ -32,14 +43,21 @@ public class RegionalTeleop extends LinearOpMode {
     PID v4bPID;
     PID lSLidesPID;
 
+    MecanumDriveEncoders motion;
+
+    PolePipeline detector = new PolePipeline(telemetry);
+
+
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry.addData("Status :", "RunOpMode");
 
         // Declare our motors
         // Make sure your ID's match your configuration
-        Definitions robot = new Definitions();
+        robot = new Definitions();
+        motion = new MecanumDriveEncoders(this, 0);
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
         robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,12 +77,35 @@ public class RegionalTeleop extends LinearOpMode {
 
         // Retrieve the IMU from the hardware map
         BNO055IMU imu;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        //imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         // Technically this is the default, however specifying it is clearer
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         // Without this, data retrieving from the IMU throws an exception
-        imu.initialize(parameters);
+        //imu.initialize(parameters);
+
+        //Camera Init stuffs
+        PolePipeline detector = new PolePipeline(telemetry);
+        robot.webcam1.setPipeline(detector);
+
+        robot.webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+                                                @Override
+                                                public void onOpened()
+                                                {
+
+                                                    telemetry.addData("status:", "not crying");
+                                                    robot.webcam1.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+                                                }
+
+                                                @Override
+                                                public void onError(int errorCode)
+                                                {
+                                                    //Cry about it
+                                                    telemetry.addData("status:", "crying");
+                                                    }
+        });
+
+
 
         //Gripper Controls
         double servoPower = 0;
@@ -83,8 +124,8 @@ public class RegionalTeleop extends LinearOpMode {
         targetV4b = 0;
 
         robot.v4bar1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //robot.lSlide1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //robot.lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.lSlide1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.v4bar1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
         float speedMultiplier = 1;
@@ -92,34 +133,30 @@ public class RegionalTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            //Pole auto align
+            if (gamepad1.a) poleState = linear;
+            else if (gamepad1.b) poleState = notMoving;
+
+            centerAlongPole();
+
             //Movement
             speedMultiplier = 1-gamepad1.right_trigger;
 
-            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = gamepad1.left_stick_x;//\ * 1.1; // Counteract imperfect strafing
-            double rx = -gamepad1.right_stick_x;
+            double x = gamepad1.left_stick_x;
+            double y = gamepad1.left_stick_y;
 
-            // Read inverse IMU heading, as the IMU heading is CW positive
-            double botHeading = -imu.getAngularOrientation().firstAngle;
+            if (poleState != notMoving) {
+                if (x != 0 && y !=0) {
+                    moveVector = new Vector2D(x,y);
+                }
+            } else {
+                moveVector = new Vector2D(x,y);
+            }
 
-            double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-            double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
+            moveVector.rotateRadians(robot.imu.getAngularOrientation().firstAngle);
+            moveVector.capAt1();
 
-            // Denominator is the largest motor power (absolute value) or 1
-            // This ensures all the powers maintain the same ratio, but only when
-            // at least one is out of the range [-1, 1]
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
-
-            robot.leftFront.setPower(frontLeftPower*speedMultiplier);
-            robot.leftBack.setPower(backLeftPower*speedMultiplier);
-            robot.rightFront.setPower(frontRightPower*speedMultiplier);
-            robot.rightBack.setPower(backRightPower*speedMultiplier);
-
-
+            motion.move(new Pose2D(moveVector, -gamepad1.right_stick_x));
 
             //Servo Controller
             if (gamepad1.dpad_up) {
@@ -148,7 +185,7 @@ public class RegionalTeleop extends LinearOpMode {
                     currentServoState = servoState.closed;
                 }
                 if (colorSensorCurrent && !colorSensorLast) {
-                    targetSlide = 150;
+                    targetSlide += 250;
                    // lSLidesPID.reset();
                 }
             }
@@ -307,6 +344,9 @@ public class RegionalTeleop extends LinearOpMode {
           //  telemetry.addData("slides i", lSLidesPID.i);
             //telemetry.addData("slides d", lSLidesPID.d);
            // telemetry.addData("slides error", lslidesError);
+            telemetry.addData("Heading", robot.imu.getAngularOrientation().firstAngle);
+            telemetry.addData("Pole Coordinate", poleCoordinate);
+            telemetry.addData("Pole Distance", poleDistance);
             telemetry.update();
 
                 //used for servo control
@@ -319,12 +359,50 @@ public class RegionalTeleop extends LinearOpMode {
     }
 //ttgttt
 
+    PoleCenteringState poleState = notMoving;
+    Vector2D moveVector = new Vector2D();
+    double poleCoordinate = 0;
+    double poleDistance = 0;
+    public void centerAlongPole() {
+        switch (poleState) {
+            case notMoving:
+                break;
+            case horizontal:
+                poleCoordinate = detector.returnX();
+                if (poleCoordinate > 450 && poleCoordinate < 520) {
+                    poleState = PoleCenteringState.linear;
+                    break;
+                }
+
+                moveVector = new Vector2D(poleCoordinate - 500 * 0.001, 0);
+                break;
+
+            case linear:
+                poleDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
+
+                if (poleDistance > 9 && poleDistance < 11) {
+                    poleState = notMoving;
+                    break;
+                }
+
+                moveVector = new Vector2D(0, (poleDistance - 10) * 0.05);
+                break;
+        }
+
+
+
+    }
     public enum servoState {
         opening,
         closed,
-        none;
+        none
     }
 
+    public enum PoleCenteringState {
+        notMoving,
+        horizontal,
+        linear
+    }
     public void newHeightStuffs() {
         v4bMoving = true;
        // lSlideMoving = true;
