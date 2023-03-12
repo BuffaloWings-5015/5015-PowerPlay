@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.RegionalTeleop.PoleCenteringState.linear;
+import static org.firstinspires.ftc.teamcode.RegionalTeleop.PoleCenteringState.horizontal;
 import static org.firstinspires.ftc.teamcode.RegionalTeleop.PoleCenteringState.notMoving;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MotionLibrary.movement.MecanumDriveEncoders;
 import org.firstinspires.ftc.teamcode.MotionLibrary.util.PID;
@@ -46,7 +45,7 @@ public class RegionalTeleop extends LinearOpMode {
     MecanumDriveEncoders motion;
 
     PolePipeline detector = new PolePipeline(telemetry);
-
+    double poleCoordinate = detector.polePos();
 
 
 
@@ -128,32 +127,62 @@ public class RegionalTeleop extends LinearOpMode {
         robot.lSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.v4bar1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
-        float speedMultiplier = 1;
+        double speedMultiplier = 1;
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
 
             //Pole auto align
-            if (gamepad1.a) poleState = linear;
+            if (gamepad1.a) poleState = horizontal;
             else if (gamepad1.b) poleState = notMoving;
 
-            centerAlongPole();
+            //centerAlongPole();
+            switch (poleState) {
+                case notMoving:
+                    break;
+                case horizontal:
+                    poleCoordinate = detector.polePos();
+                    if (290 < poleCoordinate && poleCoordinate > 310 ) {
+                        poleState = PoleCenteringState.linear;
+                        break;
+                    }
+
+                    moveVector = new Vector2D(-(detector.polePos() - 0) * 0.0005, 0);
+                    break;
+
+                case linear:
+                    poleDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
+
+                    if (poleDistance > 11 && poleDistance < 13) {
+                        poleState = notMoving;
+                        break;
+                    }
+
+                    moveVector = new Vector2D(0, (poleDistance - 12) * 0.01);
+                    break;
+            }
+
 
             //Movement
-            speedMultiplier = 1-gamepad1.right_trigger;
+            speedMultiplier = 1.25 - gamepad1.right_trigger;
+            if(speedMultiplier > 1) speedMultiplier = 1;
 
             double x = gamepad1.left_stick_x;
             double y = gamepad1.left_stick_y;
 
+            centerAlongPole();
+
             if (poleState != notMoving) {
                 if (x != 0 && y !=0) {
                     moveVector = new Vector2D(x,y);
+                    moveVector.rotateRadians(robot.imu.getAngularOrientation().firstAngle);
                 }
             } else {
                 moveVector = new Vector2D(x,y);
+                moveVector.rotateRadians(robot.imu.getAngularOrientation().firstAngle);
             }
 
-            moveVector.rotateRadians(robot.imu.getAngularOrientation().firstAngle);
+            moveVector.mult(speedMultiplier);
             moveVector.capAt1();
 
             motion.move(new Pose2D(moveVector, -gamepad1.right_stick_x));
@@ -347,6 +376,7 @@ public class RegionalTeleop extends LinearOpMode {
             telemetry.addData("Heading", robot.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Pole Coordinate", poleCoordinate);
             telemetry.addData("Pole Distance", poleDistance);
+            telemetry.addData("pole pos enum", detector.polePos());
             telemetry.update();
 
                 //used for servo control
@@ -361,31 +391,31 @@ public class RegionalTeleop extends LinearOpMode {
 
     PoleCenteringState poleState = notMoving;
     Vector2D moveVector = new Vector2D();
-    double poleCoordinate = 0;
+
     double poleDistance = 0;
     public void centerAlongPole() {
         switch (poleState) {
             case notMoving:
                 break;
             case horizontal:
-                poleCoordinate = detector.returnX();
-                if (poleCoordinate > 450 && poleCoordinate < 520) {
+                poleCoordinate = detector.polePos();
+                if (280 < poleCoordinate && poleCoordinate > 320 ) {
                     poleState = PoleCenteringState.linear;
                     break;
                 }
 
-                moveVector = new Vector2D(poleCoordinate - 500 * 0.001, 0);
+                moveVector = new Vector2D(-(detector.polePos() - 0) * 0.001, 0);
                 break;
 
             case linear:
                 poleDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
 
-                if (poleDistance > 9 && poleDistance < 11) {
+                if (poleDistance > 11 && poleDistance < 13) {
                     poleState = notMoving;
                     break;
                 }
 
-                moveVector = new Vector2D(0, (poleDistance - 10) * 0.05);
+                moveVector = new Vector2D(0, (poleDistance - 12) * 0.05);
                 break;
         }
 

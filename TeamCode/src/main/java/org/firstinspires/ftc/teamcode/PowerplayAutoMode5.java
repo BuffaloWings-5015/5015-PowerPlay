@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.RegionalTeleop.PoleCenteringState.notMoving;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MotionLibrary.movement.MecanumDriveEncoders;
 import org.firstinspires.ftc.teamcode.MotionLibrary.util.Vector2D;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -176,8 +179,6 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
         }
         public void barMoveToEncoderPosition(double power, int targetEncoderPos) {
             // Reset the robot.lSlide1 encoder count to zero
-            robot.lSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.lSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.lSlide1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             
@@ -219,5 +220,20 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
  
     }
     */
+    Vector2D moveVector = new Vector2D();
+    double poleCoordinate = 0;
+    double poleDistance = 0;
+    public void centerAlongPole() {
+        while (poleCoordinate < 450 && poleCoordinate > 520) {
+            break;
+        }
+        poleDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
+
+        while (poleDistance > 9 && poleDistance < 11) {
+            poleDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
+
+            break;
+        }
+    }
 
 }
