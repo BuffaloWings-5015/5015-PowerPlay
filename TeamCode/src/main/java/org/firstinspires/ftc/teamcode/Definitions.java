@@ -146,7 +146,7 @@ public class Definitions {
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
         lSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
         lSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
 

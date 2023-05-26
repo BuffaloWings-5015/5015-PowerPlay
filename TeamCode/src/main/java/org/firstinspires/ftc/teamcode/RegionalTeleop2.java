@@ -7,11 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="FieldCentricTeleop 😎😎😎😎")
+@TeleOp(name = "FieldCentricTeleop 😎😎😎😎")
 public class RegionalTeleop2 extends LinearOpMode {
     Definitions robot;
     int burger = 0;
     int v4barburger = 0;
+
     @Override
 
 
@@ -61,7 +62,7 @@ public class RegionalTeleop2 extends LinearOpMode {
         robot.lSlide2.setTargetPosition(0);
         robot.v4bar1.setTargetPosition(0);
         waitForStart();
-        float speedMultiplier = 1-gamepad1.right_trigger;
+        float speedMultiplier = 1 - gamepad1.right_trigger;
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
@@ -86,11 +87,10 @@ public class RegionalTeleop2 extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-            robot.leftFront.setPower(frontLeftPower*speedMultiplier);
-            robot.leftBack.setPower(backLeftPower*speedMultiplier);
-            robot.rightFront.setPower(frontRightPower*speedMultiplier);
-            robot.rightBack.setPower(backRightPower*speedMultiplier);
-
+            robot.leftFront.setPower(frontLeftPower * speedMultiplier);
+            robot.leftBack.setPower(backLeftPower * speedMultiplier);
+            robot.rightFront.setPower(frontRightPower * speedMultiplier);
+            robot.rightBack.setPower(backRightPower * speedMultiplier);
 
 
             //Servo Controller
@@ -105,9 +105,9 @@ public class RegionalTeleop2 extends LinearOpMode {
                 servoAuto = false;
             }
 
-            if(gamepad2.right_bumper || gamepad2.left_bumper) {
-               currentServoState = servoState.none;
-               servoAuto = false;
+            if (gamepad2.right_bumper || gamepad2.left_bumper) {
+                currentServoState = servoState.none;
+                servoAuto = false;
             }
 
             colorSensorCurrent = robot.colorsensor.alpha() <= 1;
@@ -138,15 +138,15 @@ public class RegionalTeleop2 extends LinearOpMode {
 
             //just p no i or d. (i got i gpu on streets last night btw)
 
-            if (gamepad2.dpad_left){
+            if (gamepad2.dpad_left) {
                 burger = 0;
                 v4barburger = 1200;
             }
-            if (gamepad2.dpad_up){
+            if (gamepad2.dpad_up) {
                 burger = 1400;
                 v4barburger = 1200;
             }
-            if (gamepad2.dpad_right){
+            if (gamepad2.dpad_right) {
                 burger = 400;
                 v4barburger = 1200;
             }
@@ -183,9 +183,7 @@ public class RegionalTeleop2 extends LinearOpMode {
             }
 
             //v4barburger 👀👀👀
-                v4barburger += 100 * -gamepad2.left_stick_y;
-
-
+            v4barburger += 100 * -gamepad2.left_stick_y;
 
 
             //Servo Controller
@@ -224,21 +222,21 @@ public class RegionalTeleop2 extends LinearOpMode {
             robot.v4bar1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide1.setPower(1);
             robot.lSlide2.setPower(1);
-            robot.v4bar1.setPower(0.6 + (Math.cos(Math.toRadians(target/robot.ticks_in_degree) * 0.1) ));
+            robot.v4bar1.setPower(0.6 + (Math.cos(Math.toRadians(target / robot.ticks_in_degree) * 0.1)));
 
-                telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
-                telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
-                telemetry.addData("linear slide encoder target", targetSlide);
-                telemetry.addData("V4Bar encoder target", targetV4b);
-                telemetry.addData("Dpad up", gamepad2.dpad_up);
-                telemetry.addData("Dpad right", gamepad2.dpad_right);
-                telemetry.addData("Dpad left", gamepad2.dpad_left);
-                telemetry.addData("Dpad down", gamepad2.dpad_down);
-                telemetry.addData("Color Sensor alpha", robot.colorsensor.alpha());
-                telemetry.addData("Servo State", currentServoState);
-                telemetry.update();
+            telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
+            telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
+            telemetry.addData("linear slide encoder target", targetSlide);
+            telemetry.addData("V4Bar encoder target", targetV4b);
+            telemetry.addData("Dpad up", gamepad2.dpad_up);
+            telemetry.addData("Dpad right", gamepad2.dpad_right);
+            telemetry.addData("Dpad left", gamepad2.dpad_left);
+            telemetry.addData("Dpad down", gamepad2.dpad_down);
+            telemetry.addData("Color Sensor alpha", robot.colorsensor.alpha());
+            telemetry.addData("Servo State", currentServoState);
+            telemetry.update();
 
-                //used for servo control
+            //used for servo control
             lastServoState = currentServoState;
             colorSensorLast = colorSensorCurrent;
         }

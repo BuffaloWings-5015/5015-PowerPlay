@@ -35,8 +35,9 @@ public class Ultrasonic {
      * Calculates the distance based on the constants and the current voltage of the ultrasonic sensor
      */
     public double getDistance() {
-        return (sensor.getVoltage() - minimumVoltage) / inchesPerVolt;
+        return (sensor.getVoltage() - 0.1366) / 0.01191;
     }
+
 
     /**
      * Gets the voltage from the ultrasonic sensor.

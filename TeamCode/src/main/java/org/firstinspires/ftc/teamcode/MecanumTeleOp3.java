@@ -55,7 +55,7 @@ public class MecanumTeleOp3 extends LinearOpMode {
             double rx = -gamepad1.right_stick_x;
 
             // Read inverse IMU heading, as the IMU heading is CW positive
-            double botHeading = -imu.getAngularOrientation().firstAngle;
+            double botHeading = 0;//-imu.getAngularOrientation().firstAngle;
 
             double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
             double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
@@ -75,14 +75,14 @@ public class MecanumTeleOp3 extends LinearOpMode {
             robot.rightBack.setPower(backRightPower*speedMultiplier);
 
 
-                if (gamepad2.left_bumper) {
-                    robot.claw.setPower(0.5);
-                }
-                else if (gamepad2.right_bumper) {
-                    robot.claw.setPower(-0.5);
-                } else {
-                    robot.claw.setPower(0);
-                }
+            if (gamepad2.left_bumper) {
+                robot.claw.setPower(0.5);
+            }
+            else if (gamepad2.right_bumper) {
+                robot.claw.setPower(-0.5);
+            } else {
+                robot.claw.setPower(0);
+            }
 
                 /*
             float v4barspeed;
@@ -149,25 +149,25 @@ public class MecanumTeleOp3 extends LinearOpMode {
                 robot.lSlide1.setPower(0);
             }
 
-                robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-               // robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti + fbConst);
+            // robot.v4bar1.setPower((robot.v4bar1.getCurrentPosition() - targetV4b) * KV4bMulti + fbConst);
             // robot.lSlide1.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
-               //robot.lSlide2.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
+            //robot.lSlide2.setPower((robot.lSlide1.getCurrentPosition() - targetSlide) * KslideMulti);
 
-                telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
-                telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
-                telemetry.addData("linear slide encoder target", targetSlide);
-                telemetry.addData("V4Bar encoder target", targetV4b);
-                telemetry.addData("Dpad up", gamepad2.dpad_up);
-                telemetry.addData("Dpad right", gamepad2.dpad_right);
-                telemetry.addData("Dpad left", gamepad2.dpad_left);
-                telemetry.addData("Dpad down", gamepad2.dpad_down);
-                telemetry.update();
-                robot.lSlide1.setPower(1);
-                robot.lSlide2.setPower(1);
-                robot.v4bar1.setPower(1);
+            telemetry.addData("linear slide encoder", robot.lSlide2.getCurrentPosition());
+            telemetry.addData("V4Bar encoder", robot.v4bar1.getCurrentPosition());
+            telemetry.addData("linear slide encoder target", targetSlide);
+            telemetry.addData("V4Bar encoder target", targetV4b);
+            telemetry.addData("Dpad up", gamepad2.dpad_up);
+            telemetry.addData("Dpad right", gamepad2.dpad_right);
+            telemetry.addData("Dpad left", gamepad2.dpad_left);
+            telemetry.addData("Dpad down", gamepad2.dpad_down);
+            telemetry.update();
+            robot.lSlide1.setPower(1);
+            robot.lSlide2.setPower(1);
+            robot.v4bar1.setPower(1);
 
 
         }

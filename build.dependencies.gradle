@@ -1,13 +1,13 @@
 repositories {
     mavenCentral()
     google() // Needed for androidx
-    maven { url = 'https://maven.brott.dev/' }
     flatDir {
         dirs rootProject.file('libs')
 
     }
     maven {url = 'https://jitpack.io'}
     maven {url = 'https://maven.brott.dev'}
+
 }
 
 dependencies {
@@ -25,6 +25,7 @@ dependencies {
     implementation('com.acmerobotics.dashboard:dashboard:0.4.7') {
         exclude group: 'org.firstinspires.ftc'
     }
+    implementation 'com.github.RR-9527:robot-code-v2:1.0.0'
 
 }
 

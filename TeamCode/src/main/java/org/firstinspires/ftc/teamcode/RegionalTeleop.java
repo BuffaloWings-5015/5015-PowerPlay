@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.MotionLibrary.util.Vector2D;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@TeleOp(name="FieldCentricTeleop")
+@TeleOp(name = "FieldCentricTeleop")
 public class RegionalTeleop extends LinearOpMode {
 
 
@@ -48,7 +48,6 @@ public class RegionalTeleop extends LinearOpMode {
     double poleCoordinate = detector.polePos();
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status :", "RunOpMode");
@@ -65,11 +64,11 @@ public class RegionalTeleop extends LinearOpMode {
         robot.lSlide2.setTargetPosition(0);
         //PID stuffs
 
-       // PID.setConstantsSlides(-0.001, 0.0000, 0.0000);
-        PID.setConstantsArm(0.0007,0.0000001,0.00001);
+        // PID.setConstantsSlides(-0.001, 0.0000, 0.0000);
+        PID.setConstantsArm(0.0007, 0.0000001, 0.00001);
 
         v4bPID = new PID(PID.Type.arm);
-       // lSLidesPID = new PID(PID.Type.slides);
+        // lSLidesPID = new PID(PID.Type.slides);
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
 
@@ -88,22 +87,19 @@ public class RegionalTeleop extends LinearOpMode {
         robot.webcam1.setPipeline(detector);
 
         robot.webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-                                                @Override
-                                                public void onOpened()
-                                                {
+            @Override
+            public void onOpened() {
 
-                                                    telemetry.addData("status:", "not crying");
-                                                    robot.webcam1.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
-                                                }
+                telemetry.addData("status:", "not crying");
+                robot.webcam1.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+            }
 
-                                                @Override
-                                                public void onError(int errorCode)
-                                                {
-                                                    //Cry about it
-                                                    telemetry.addData("status:", "crying");
-                                                    }
+            @Override
+            public void onError(int errorCode) {
+                //Cry about it
+                telemetry.addData("status:", "crying");
+            }
         });
-
 
 
         //Gripper Controls
@@ -115,7 +111,6 @@ public class RegionalTeleop extends LinearOpMode {
         boolean colorSensorLast = false;
         boolean colorSensorCurrent = false;
         double colorSensorCooldown = 0;
-
 
 
         fbConst = 0;
@@ -142,7 +137,7 @@ public class RegionalTeleop extends LinearOpMode {
                     break;
                 case horizontal:
                     poleCoordinate = detector.polePos();
-                    if (290 < poleCoordinate && poleCoordinate > 310 ) {
+                    if (290 < poleCoordinate && poleCoordinate > 310) {
                         poleState = PoleCenteringState.linear;
                         break;
                     }
@@ -165,7 +160,7 @@ public class RegionalTeleop extends LinearOpMode {
 
             //Movement
             speedMultiplier = 1.25 - gamepad1.right_trigger;
-            if(speedMultiplier > 1) speedMultiplier = 1;
+            if (speedMultiplier > 1) speedMultiplier = 1;
 
             double x = gamepad1.left_stick_x;
             double y = gamepad1.left_stick_y;
@@ -173,12 +168,12 @@ public class RegionalTeleop extends LinearOpMode {
             centerAlongPole();
 
             if (poleState != notMoving) {
-                if (x != 0 && y !=0) {
-                    moveVector = new Vector2D(x,y);
+                if (x != 0 && y != 0) {
+                    moveVector = new Vector2D(x, y);
                     moveVector.rotateRadians(robot.imu.getAngularOrientation().firstAngle);
                 }
             } else {
-                moveVector = new Vector2D(x,y);
+                moveVector = new Vector2D(x, y);
                 moveVector.rotateRadians(robot.imu.getAngularOrientation().firstAngle);
             }
 
@@ -199,9 +194,9 @@ public class RegionalTeleop extends LinearOpMode {
                 servoAuto = false;
             }
 
-            if(gamepad2.right_bumper || gamepad2.left_bumper) {
-               currentServoState = servoState.none;
-               servoAuto = false;
+            if (gamepad2.right_bumper || gamepad2.left_bumper) {
+                currentServoState = servoState.none;
+                servoAuto = false;
             }
 
             colorSensorCurrent = robot.colorsensor.alpha() <= 2;
@@ -215,7 +210,7 @@ public class RegionalTeleop extends LinearOpMode {
                 }
                 if (colorSensorCurrent && !colorSensorLast) {
                     targetSlide += 250;
-                   // lSLidesPID.reset();
+                    // lSLidesPID.reset();
                 }
             }
 
@@ -236,7 +231,7 @@ public class RegionalTeleop extends LinearOpMode {
 
             //just p no i or d. (i got i gpu on streets last night btw)
 
-            if (gamepad2.dpad_left){
+            if (gamepad2.dpad_left) {
                 robot.v4bar1.setTargetPosition(1150);
                 targetSlide = 0;
                 targetV4b = 1150;
@@ -245,7 +240,7 @@ public class RegionalTeleop extends LinearOpMode {
                 }
                 gamepad2LeftLast = true;
             } else gamepad2LeftLast = false;
-            if (gamepad2.dpad_up){
+            if (gamepad2.dpad_up) {
                 robot.v4bar1.setTargetPosition(1150);
                 targetSlide = 1350;
                 targetV4b = 1150;
@@ -254,7 +249,7 @@ public class RegionalTeleop extends LinearOpMode {
                 }
                 gamepad2UpLast = true;
             } else gamepad2UpLast = false;
-            if (gamepad2.dpad_right){
+            if (gamepad2.dpad_right) {
                 robot.v4bar1.setTargetPosition(1150);
                 targetSlide = 400;
                 targetV4b = 1150;
@@ -281,7 +276,6 @@ public class RegionalTeleop extends LinearOpMode {
             final double KV4bMulti;
             KslideMulti = -0.025;
             KV4bMulti = -0.001;
-
 
 
             //Servo Controller
@@ -332,9 +326,9 @@ public class RegionalTeleop extends LinearOpMode {
             robot.lSlide1.setPower(Range.clip(lslidePower, -1, 1));
             robot.lSlide2.setPower(Range.clip(lslidePower, -1, 1));
 */
-            double v4bError = targetV4b-robot.v4bar1.getCurrentPosition();
+            double v4bError = targetV4b - robot.v4bar1.getCurrentPosition();
 
-            v4bAngle = robot.v4bar1.getCurrentPosition()/v4bTicsToDegrees + 12; //The 12 is the starting angle of the 4bar (It is a little bit forward)
+            v4bAngle = robot.v4bar1.getCurrentPosition() / v4bTicsToDegrees + 12; //The 12 is the starting angle of the 4bar (It is a little bit forward)
             v4bAdd = Math.sin(Math.toRadians(v4bAngle)) * v4bAddMulti;
             v4bPID.pid(v4bError);
             v4bPower = v4bPID.pidout + v4bAdd;
@@ -370,20 +364,19 @@ public class RegionalTeleop extends LinearOpMode {
             telemetry.addData("v4b error", v4bError);
             telemetry.addData("Slides Power", lslidePower);
             //telemetry.addData("slides p", lSLidesPID.p);
-          //  telemetry.addData("slides i", lSLidesPID.i);
+            //  telemetry.addData("slides i", lSLidesPID.i);
             //telemetry.addData("slides d", lSLidesPID.d);
-           // telemetry.addData("slides error", lslidesError);
+            // telemetry.addData("slides error", lslidesError);
             telemetry.addData("Heading", robot.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Pole Coordinate", poleCoordinate);
             telemetry.addData("Pole Distance", poleDistance);
             telemetry.addData("pole pos enum", detector.polePos());
             telemetry.update();
 
-                //used for servo control
+            //used for servo control
             lastServoState = currentServoState;
             colorSensorLast = colorSensorCurrent;
         }
-
 
 
     }
@@ -393,13 +386,14 @@ public class RegionalTeleop extends LinearOpMode {
     Vector2D moveVector = new Vector2D();
 
     double poleDistance = 0;
+
     public void centerAlongPole() {
         switch (poleState) {
             case notMoving:
                 break;
             case horizontal:
                 poleCoordinate = detector.polePos();
-                if (280 < poleCoordinate && poleCoordinate > 320 ) {
+                if (280 < poleCoordinate && poleCoordinate > 320) {
                     poleState = PoleCenteringState.linear;
                     break;
                 }
@@ -420,23 +414,20 @@ public class RegionalTeleop extends LinearOpMode {
         }
 
 
-
     }
+
     public enum servoState {
-        opening,
-        closed,
-        none
+        opening, closed, none
     }
 
     public enum PoleCenteringState {
-        notMoving,
-        horizontal,
-        linear
+        notMoving, horizontal, linear
     }
+
     public void newHeightStuffs() {
         v4bMoving = true;
-       // lSlideMoving = true;
-       // lSLidesPID.reset();
+        // lSlideMoving = true;
+        // lSLidesPID.reset();
         v4bPID.reset();
     }
 }

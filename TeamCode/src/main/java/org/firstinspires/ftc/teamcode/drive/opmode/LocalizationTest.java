@@ -39,6 +39,12 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+            /*
+            telemetry.addData("encoder LF", drive.leftFront.getCurrentPosition());
+            telemetry.addData("encoder RF", drive.rightFront.getCurrentPosition());
+            telemetry.addData("encoder LR", drive.leftRear.getCurrentPosition());
+            telemetry.addData("encoder RR", drive.rightRear.getCurrentPosition());
+            */
             telemetry.update();
         }
     }
