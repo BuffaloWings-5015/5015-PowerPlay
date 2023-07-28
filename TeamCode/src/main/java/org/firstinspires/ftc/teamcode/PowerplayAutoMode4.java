@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.MotionLibrary.movement.MecanumDriveEncoders;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -36,8 +35,6 @@ public class PowerplayAutoMode4 extends LinearOpMode {
     double d_left, d_right, d_front;
     Definitions robot;
 
-    MecanumDriveEncoders motion;
-
     public double speedmulti = (double) 0.3;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,8 +42,6 @@ public class PowerplayAutoMode4 extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.robotHardwareMapInit(hardwareMap);
         robot.driveInit();
-        motion = new MecanumDriveEncoders(this, 0);
-
         OpenCvCamera webcam;
         autoStage stage = autoStage.one;
         double[] poseValues = calculateRobotPose(d_left, d_front, d_right);
@@ -91,7 +86,7 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
 
 
         TrajectorySequence auto = drive.trajectorySequenceBuilder(new Pose2d(35.03, -62.03, Math.toRadians(90.00)))
-        .lineToSplineHeading(new Pose2d(33.15, -8.74, Math.toRadians(-45)))
+        .lineToLinearHeading(new Pose2d(33.15, -8.74, Math.toRadians(-45)))
         .splineTo(new Vector2d(47.74, -12.64), Math.toRadians(-11.11))
         .splineTo(new Vector2d(59.15, -12.49), Math.toRadians(1.43))
         //fetch new cone
@@ -111,6 +106,8 @@ Pose2d startingPose = new Pose2d(x, y, Math.toRadians(heading));
 
 
         drive.followTrajectorySequence(auto);
+
+
 
         dashboard = FtcDashboard.getInstance();
        /* horizpole:

@@ -15,6 +15,7 @@ public class BezierCurve {
     public double endHeading;
     public boolean changeHeading;
 
+    /*
     public BezierCurve(Vector2D a, Vector2D b, Vector2D End, double Steps) {
         steps = (int)Steps;
         for (int i = 0; i < Steps; i++ ) {
@@ -27,6 +28,7 @@ public class BezierCurve {
         B = b;
         end = End;
     }
+     */
 
     public BezierCurve(Vector2D a, Vector2D b, Vector2D End, double Steps, double heading) {
         steps = (int)Steps;
@@ -38,6 +40,19 @@ public class BezierCurve {
         A = a;
         B = b;
         end = End;
+        changeHeading = true;
+        this.endHeading = heading;
+    }
+
+    public BezierCurve(double Steps, double heading, Vector2D... points) {
+        steps = (int)Steps;
+
+        for (int i = 0; i < Steps; i++ ) {
+            for (int n = 0; n < steps/points.length; n++ ) {
+                vector2DList.add(getMiddlePoint(points[i], points[i++], n));
+            }
+        }
+
         changeHeading = true;
         this.endHeading = heading;
     }

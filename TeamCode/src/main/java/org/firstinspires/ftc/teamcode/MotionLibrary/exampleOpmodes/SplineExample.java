@@ -64,7 +64,7 @@ public class SplineExample extends LinearOpMode
     private DcMotor rightDrive = null;
 
     Path line1 = new Path()
-            .add (new BezierCurve(new Vector2D(1, 1), new Vector2D(10, 10), new Vector2D(100, 100), 100))
+            .add (new BezierCurve(100, 0, new Vector2D(1, 1), new Vector2D(10, 10), new Vector2D(100, 100)))
             .add( new HermiteCurve( new Vector2D(10, 10), new Vector2D(1, 1), new Vector2D(10, 0), new Vector2D(100), 100))
             .add( new Line( new Vector2D(1), new Vector2D(10)))
             .smoothConnect(50, new Line( new Vector2D(100, 20), new Vector2D(100)));
@@ -75,7 +75,7 @@ public class SplineExample extends LinearOpMode
     public void runOpMode() {
         runtime.reset();
         Drive.followPathBack(new Path(
-                new BezierCurve(new Vector2D(1, 1), new Vector2D(10, 10), new Vector2D(100, 100), 100)),
+                new BezierCurve(100, 0, new Vector2D(1, 1), new Vector2D(10, 10), new Vector2D(100, 100))),
         20);
 
         Path line2 = new Path()
